@@ -1066,7 +1066,7 @@
 
     <div x-data="{
             guestId: null,
-            name: 'Tamu Undangan &amp; Kerabat',
+            name: '',
             message: '',
             loading: false,
             loadingPage: false,
@@ -1104,22 +1104,8 @@
                     this.name = this.guestName;
                 }
             },
-            get visiblePages() {
-                const pages = [];
-                const total = this.lastPage;
-                const current = this.currentPage;
-                if (total <= 5) {
-                    for (let i = 1; i <= total; i++) pages.push(i);
-                } else {
-                    if (current <= 3) {
-                        pages.push(1, 2, 3, 4, '...', total);
-                    } else if (current >= total - 2) {
-                        pages.push(1, '...', total - 3, total - 2, total - 1, total);
-                    } else {
-                        pages.push(1, '...', current - 1, current, current + 1, '...', total);
-                    }
-                }
-                return pages;
+            get pageNumbers() {
+                return Array.from({ length: this.lastPage }, (_, index) => index + 1);
             },
             async goToPage(page, force = false) {
                 if ((page < 1 || page > this.lastPage || page === this.currentPage) && !force) return;
@@ -1218,12 +1204,12 @@
         </form>
 
         <!-- Messages Feed Header -->
-        <div class="flex items-center justify-between mb-4 pb-2 border-b border-[#D5E2D7]/60">
-            <div class="flex items-center gap-2">
-                <span class="text-xs font-semibold uppercase tracking-wider text-[#3B5A40]" x-text="t('gb_feed_title')">Daftar Do'a & Ucapan</span>
-                <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#E5EFE7] text-[#3B5A40]" x-text="total + ' ' + t('gb_wishes_count')"></span>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4 pb-2 border-b border-[#D5E2D7]/60">
+            <div class="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
+                <span class="text-xs leading-relaxed font-semibold uppercase tracking-wider text-[#3B5A40]" x-text="t('gb_feed_title')">Daftar Do'a & Ucapan</span>
+                <span class="inline-flex shrink-0 whitespace-nowrap items-center justify-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#E5EFE7] text-[#3B5A40]" x-text="total + ' ' + t('gb_wishes_count')"></span>
             </div>
-            <div x-show="lastPage > 1" class="text-[11px] text-[#57795C] font-medium">
+            <div x-show="lastPage > 1" class="self-end sm:self-auto whitespace-nowrap text-[11px] text-[#57795C] font-medium">
                 <span x-text="t('gb_page')">Halaman</span> <span class="font-bold" x-text="currentPage"></span> <span x-text="t('gb_of')">dari</span> <span class="font-bold" x-text="lastPage"></span>
             </div>
         </div>
@@ -1283,25 +1269,18 @@
             </button>
 
             <!-- Quick Jump Page Number Buttons -->
-            <div class="flex items-center gap-1">
-                <template x-for="(p, idx) in visiblePages" :key="idx">
-                    <div class="inline-flex">
-                        <template x-if="p === '...'">
-                            <span class="w-7 h-7 flex items-center justify-center text-xs text-[#526356]">...</span>
-                        </template>
-                        <template x-if="p !== '...'">
-                            <button 
-                                type="button"
-                                @click="goToPage(p)"
-                                :disabled="loadingPage"
-                                :class="p === currentPage 
-                                    ? 'bg-gradient-to-r from-[#6F9575] to-[#57795C] text-white font-bold shadow-xs' 
-                                    : 'bg-white border border-[#D5E2D7] text-[#526356] hover:bg-[#F4F7F4] font-medium'"
-                                class="w-7 h-7 rounded-full text-xs transition flex items-center justify-center cursor-pointer"
-                                x-text="p">
-                            </button>
-                        </template>
-                    </div>
+            <div class="flex flex-wrap items-center justify-center gap-1.5">
+                <template x-for="p in pageNumbers" :key="p">
+                    <button 
+                        type="button"
+                        @click="goToPage(p)"
+                        :disabled="loadingPage"
+                        :style="p === currentPage
+                            ? 'background: linear-gradient(135deg, #6F9575, #57795C); color: #ffffff; border: 1px solid #57795C; box-shadow: 0 4px 10px rgba(87,121,92,.35);'
+                            : 'background: #ffffff; color: #526356; border: 1px solid #D5E2D7; box-shadow: 0 1px 3px rgba(35,51,39,.08);'"
+                        class="w-7 h-7 rounded-full text-xs font-bold transition flex items-center justify-center cursor-pointer"
+                        x-text="p">
+                    </button>
                 </template>
             </div>
 
