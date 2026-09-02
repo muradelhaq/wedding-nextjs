@@ -68,14 +68,22 @@ export async function saveRsvp(input: {
     guestId = guest?.id ?? null;
   }
   if (!guestId) throw new Error("Guest could not be created");
-  const [rsvp] = await query(
-    `insert into rsvps (guest_id,attendance,total_guest,notes,created_at,updated_at)
-     values ($1,$2,$3,$4,now(),now())
-     on conflict (guest_id) do update set attendance=excluded.attendance,total_guest=excluded.total_guest,notes=excluded.notes,updated_at=now()
+  const [existingRsvp] = await query(
+    `update rsvps
+     set attendance=$2,total_guest=$3,notes=$4,updated_at=now()
+     where guest_id=$1
      returning *`,
     [guestId, input.attendance, input.totalGuest, input.notes],
   );
-  return rsvp;
+  if (existingRsvp) return existingRsvp;
+
+  const [newRsvp] = await query(
+    `insert into rsvps (guest_id,attendance,total_guest,notes,created_at,updated_at)
+     values ($1,$2,$3,$4,now(),now())
+     returning *`,
+    [guestId, input.attendance, input.totalGuest, input.notes],
+  );
+  return newRsvp;
 }
 
 function relativeTime(value: string) {
