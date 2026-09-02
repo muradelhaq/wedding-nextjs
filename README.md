@@ -86,9 +86,12 @@ wedding-nextjs/
    - Memasukkan ke tabel `guestbooks` dengan status `is_approved = true`.
 
 ### D. Alur Panel Admin (`/admin`)
-1. **Autentikasi**:
+1. **Autentikasi & Akun Default**:
+   - **URL Login**: `/admin`
+   - **Email**: `admin@wedding.com`
+   - **Password**: `password`
    - Sesi menggunakan cookie HTTP-Only `wedding_admin` bertanda tangan HMAC-SHA256 (`userId.expires.signature`).
-   - Login mencocokkan email dan `password = crypt($2, password)` di tabel `users`.
+   - Verifikasi password mencocokkan hash bcrypt di tabel `users` (mendukung kompatibilitas prefix `$2y$` dan `$2a$`).
 2. **Dashboard & API**:
    - Menggunakan Single-File Admin UI yang ringan di [`app/admin/route.ts`](file:///home/muradelhaq/Documents/GitHub/wedding-nextjs/app/admin/route.ts).
    - Operasi CRUD tabel (`guests`, `rsvps`, `guestbooks`, `settings`, `stories`, `galleries`) diproses via REST API di [`app/admin/api/[resource]/route.ts`](file:///home/muradelhaq/Documents/GitHub/wedding-nextjs/app/admin/api/%5Bresource%5D/route.ts).

@@ -25,7 +25,7 @@ export function isAdminRequest(request: Request) {
 
 export async function verifyAdmin(email: string, password: string) {
   const [user] = await query<{ id: number }>(
-    `select id from users where lower(email)=lower($1) and password=crypt($2,password) limit 1`,
+    `select id from users where lower(email)=lower($1) and (password=crypt($2,password) or replace(password,'$2y$','$2a$')=crypt($2,replace(password,'$2y$','$2a$'))) limit 1`,
     [email, password],
   );
   return user ?? null;
