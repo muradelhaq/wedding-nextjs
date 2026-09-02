@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="csrf-token" content="2PFPcUTjue0fwPCXy94tm11hONX3QdWafx4P2QEk">
+
+    <title>The Wedding of Ramazan &amp; Dede</title>
+    
+    <!-- OpenGraph / WhatsApp Preview Metadata -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="The Wedding of Ramazan &amp; Dede">
+    <meta property="og:description" content="Dengan memohon Rahmat & Ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara Tasyakuran Pernikahan kami.">
+    <meta property="og:image" content="/images/cartoon_couple_cover.webp">
+    <meta property="og:url" content="">
+
+    <!-- High Priority Preload for Instant Cover Rendering -->
+    <link rel="preload" as="image" href="/images/cartoon_couple_cover.webp">
+
+    <!-- Google Fonts: Great Vibes, Alex Brush, Playfair Display, Cinzel, Amiri, Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700;900&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Play CDN for Instant Zero-Fail Styling on Mobile / Ngrok -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        script: ['Great Vibes', 'Alex Brush', 'cursive'],
+                        serif: ['Playfair Display', 'Cormorant Garamond', 'Georgia', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+                        arabic: ['Amiri', 'Traditional Arabic', 'serif'],
+                        display: ['Cinzel', 'serif']
+                    },
+                    colors: {
+                        sage: {
+                            50: '#f4f7f4',
+                            100: '#eaf0eb',
+                            200: '#d5e2d7',
+                            300: '#b6cdb9',
+                            400: '#91b395',
+                            500: '#6f9575',
+                            600: '#57795c',
+                            700: '#425e47',
+                            800: '#314736',
+                            900: '#233327',
+                            950: '#162119'
+                        },
+                        gold: {
+                            50: '#f4f7f4',
+                            100: '#eaf0eb',
+                            200: '#d5e2d7',
+                            300: '#b6cdb9',
+                            400: '#91b395',
+                            500: '#6f9575',
+                            600: '#57795c',
+                            700: '#425e47',
+                            800: '#314736',
+                            900: '#233327'
+                        },
+                        champagne: {
+                            50: '#f4f7f4',
+                            100: '#eaf0eb',
+                            200: '#d5e2d7',
+                            300: '#b6cdb9',
+                            400: '#91b395',
+                            500: '#6f9575'
+                        },
+                        emerald: {
+                            800: '#314736',
+                            900: '#233327',
+                            950: '#162119'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Compiled Local Vite Assets -->
+    <link rel="preload" as="style" href="/build/assets/app-BbIdt9Yp.css" /><link rel="modulepreload" as="script" href="/build/assets/app-e2N8cFl4.js" /><link rel="stylesheet" href="/build/assets/app-BbIdt9Yp.css" data-navigate-track="reload" /><script type="module" src="/build/assets/app-e2N8cFl4.js" data-navigate-track="reload"></script>
+</head>
+<body class="bg-[#F4F7F4] text-[#233327] font-sans antialiased selection:bg-[#6F9575]/25 selection:text-[#314736] min-h-screen overflow-x-hidden">
+
+    <!-- Main Content Slot -->
+    <div x-data="{
+            isOpened: false,
+            isCurtainOpening: false,
+            isPlaying: false,
+            lang: window.detectWeddingLanguage ? window.detectWeddingLanguage() : 'id',
+            guestName: 'Tamu Undangan &amp; Kerabat',
+            setLanguage(newLang) {
+                this.lang = newLang;
+                try {
+                    localStorage.setItem('wedding_lang', newLang);
+                } catch(e) {}
+            },
+            t(key) {
+                if (window.weddingTranslations && window.weddingTranslations[this.lang] && window.weddingTranslations[this.lang][key]) {
+                    return window.weddingTranslations[this.lang][key];
+                }
+                if (window.weddingTranslations && window.weddingTranslations['id'] && window.weddingTranslations['id'][key]) {
+                    return window.weddingTranslations['id'][key];
+                }
+                return key;
+            },
+            init() {
+                const params = new URLSearchParams(window.location.search);
+                const toParam = params.get('to');
+                if (toParam && (!this.guestName || this.guestName === 'Tamu Undangan & Kerabat')) {
+                    this.guestName = toParam;
+                }
+
+                const audio = document.getElementById('wedding-audio') || document.querySelector('audio');
+                if (audio) {
+                    audio.addEventListener('play', () => { this.isPlaying = true; });
+                    audio.addEventListener('pause', () => { this.isPlaying = false; });
+                    audio.addEventListener('ended', () => { this.isPlaying = false; });
+                }
+            },
+            openInvitation() {
+                if (this.isCurtainOpening) return;
+                this.isCurtainOpening = true;
+
+                // 1. Play Background Music immediately upon user gesture click
+                const audio = document.getElementById('wedding-audio') || document.querySelector('audio');
+                if (audio) {
+                    audio.muted = false;
+                    const playPromise = audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            this.isPlaying = true;
+                        }).catch(e => {
+                            console.warn('Playback error or waiting interaction:', e);
+                            const resumeOnInteraction = () => {
+                                audio.play().then(() => {
+                                    this.isPlaying = true;
+                                }).catch(() => {});
+                                document.removeEventListener('click', resumeOnInteraction);
+                                document.removeEventListener('touchstart', resumeOnInteraction);
+                            };
+                            document.addEventListener('click', resumeOnInteraction, { once: true });
+                            document.addEventListener('touchstart', resumeOnInteraction, { once: true });
+                        });
+                    }
+                }
+
+                // 2. Theatrical Curtain Opening duration (1.2s), then reveal main content
+                setTimeout(() => {
+                    this.isOpened = true;
+                    // Initialize scroll reveal observer for freshly revealed content
+                    this.$nextTick(() => {
+                        if (window.initScrollReveal) {
+                            window.initScrollReveal();
+                        }
+                    });
+                    // Ensure starts at top of hero
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                }, 1200);
+            },
+            toggleAudio() {
+                const audio = document.getElementById('wedding-audio') || document.querySelector('audio');
+                if (!audio) return;
+                if (this.isPlaying) {
+                    audio.pause();
+                    this.isPlaying = false;
+                } else {
+                    audio.play().then(() => {
+                        this.isPlaying = true;
+                    }).catch(e => {
+                        console.warn('Audio play error:', e);
+                    });
+                }
+            }
+         }"
+          class="relative min-h-screen bg-[#F4F7F4]">
+
+        <!-- Floating Language Switcher (Always available on Cover and Main page) -->
+        <div class="fixed top-3 right-3 sm:top-4 sm:right-4 z-[75] flex items-center bg-[#162119]/85 backdrop-blur-md border border-[#6F9575]/60 rounded-full p-1 shadow-[0_4px_20px_rgba(0,0,0,0.35)] select-none">
+    <button 
+        type="button"
+        @click="setLanguage('id')"
+        :class="lang === 'id' ? 'bg-gradient-to-r from-[#6F9575] to-[#57795C] text-white font-bold shadow-xs scale-105' : 'text-[#D5E2D7] hover:text-white opacity-70 hover:opacity-100'"
+        class="px-2 sm:px-2.5 py-1 rounded-full text-xs font-sans transition-all duration-200 flex items-center gap-1 cursor-pointer">
+        <span class="text-xs">🇮🇩</span>
+        <span class="text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold">ID</span>
+    </button>
+    
+    <button 
+        type="button"
+        @click="setLanguage('tr')"
+        :class="lang === 'tr' ? 'bg-gradient-to-r from-[#6F9575] to-[#57795C] text-white font-bold shadow-xs scale-105' : 'text-[#D5E2D7] hover:text-white opacity-70 hover:opacity-100'"
+        class="px-2 sm:px-2.5 py-1 rounded-full text-xs font-sans transition-all duration-200 flex items-center gap-1 cursor-pointer">
+        <span class="text-xs">🇹🇷</span>
+        <span class="text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold">TR</span>
+    </button>
+    
+    <button 
+        type="button"
+        @click="setLanguage('en')"
+        :class="lang === 'en' ? 'bg-gradient-to-r from-[#6F9575] to-[#57795C] text-white font-bold shadow-xs scale-105' : 'text-[#D5E2D7] hover:text-white opacity-70 hover:opacity-100'"
+        class="px-2 sm:px-2.5 py-1 rounded-full text-xs font-sans transition-all duration-200 flex items-center gap-1 cursor-pointer">
+        <span class="text-xs">🇬🇧</span>
+        <span class="text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold">EN</span>
+    </button>
+</div>
+
+        <!-- 1. Cover Overlay Section (Curtain Opening Animation on Click) -->
+        <section 
+    x-show="!isOpened"
+    x-transition:leave="transition ease-in-out duration-700"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    class="fixed inset-0 z-50 flex items-center justify-center select-none overflow-hidden bg-[#162119]">
+
+    <!-- Frame Wrapper Mobile View (Ukuran 9:16 Responsif) -->
+    <div class="wedding-card relative w-full max-w-[430px] h-full max-h-[932px] overflow-hidden shadow-2xl rounded-none sm:rounded-2xl flex flex-col justify-between items-center bg-[#162119]">
+        
+        <!-- 1. Background Cartoon Couple Cover Layer -->
+        <div class="bg-palace absolute inset-0 z-1 bg-cover bg-center pointer-events-none transition-transform duration-1000"
+             :class="isCurtainOpening ? 'scale-105' : ''"
+             style="background-image: url('/images/cartoon_couple_cover.webp');">
+            <!-- Dark Vignette for High Text Readability -->
+            <div class="absolute inset-0 bg-gradient-to-b from-[#162119]/60 via-[#162119]/25 to-[#162119]/80"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(22,33,25,0.45)_0%,rgba(22,33,25,0.1)_55%,rgba(22,33,25,0.65)_100%)]"></div>
+        </div>
+
+        <!-- 2. Sunlight Glow Overlay -->
+        <div class="sunlight-overlay absolute inset-0 z-2 pointer-events-none"
+             style="background: radial-gradient(circle at 50% 25%, rgba(244, 247, 244, 0.25) 0%, rgba(111, 149, 117, 0.15) 60%, rgba(22,33,25,0.3) 100%);">
+        </div>
+
+        <!-- 3. Luxury Top Corner Draperies (Tirai Atas Kiri & Kanan) -->
+        <!-- Left Top Curtain -->
+        <div class="curtain curtain-left absolute top-0 left-0 w-[45%] h-[35%] z-20 pointer-events-none transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]"
+             :style="isCurtainOpening ? 'transform: translate(-100%, -100%) scale(0.5) !important; opacity: 0;' : 'background: radial-gradient(ellipse at top left, rgba(255,255,255,0.8), rgba(213,226,215,0.4) 70%, transparent 100%); backdrop-filter: blur(2px); border-bottom-right-radius: 100% 90%; transform: translateX(-5%); animation: curtainWaveLeft 6s ease-in-out infinite alternate;'">
+        </div>
+
+        <!-- Right Top Curtain -->
+        <div class="curtain curtain-right absolute top-0 right-0 w-[45%] h-[35%] z-20 pointer-events-none transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]"
+             :style="isCurtainOpening ? 'transform: translate(100%, -100%) scale(0.5) !important; opacity: 0;' : 'background: radial-gradient(ellipse at top right, rgba(255,255,255,0.8), rgba(213,226,215,0.4) 70%, transparent 100%); backdrop-filter: blur(2px); border-bottom-left-radius: 100% 90%; transform: translateX(5%); animation: curtainWaveRight 6s ease-in-out infinite alternate;'">
+        </div>
+
+        <!-- 4. Lengkungan Bunga & Pilar (Floral Arch Frame) -->
+        <div class="arch-frame absolute inset-x-[5%] top-[5%] bottom-0 border-2 border-[#6F9575]/50 border-b-0 rounded-t-[180px] z-4 pointer-events-none shadow-[inset_0_0_20px_rgba(255,255,255,0.3)] transition-all duration-1000"
+             :class="isCurtainOpening ? 'opacity-0 scale-105' : 'opacity-100'">
+        </div>
+
+        <!-- 5. Merpati Terbang (Doves) -->
+        <div class="dove-container absolute top-[6%] left-1/2 -translate-x-1/2 z-6 flex gap-8 pointer-events-none transition-all duration-700"
+             :class="isCurtainOpening ? 'opacity-0 -translate-y-10' : 'opacity-100'"
+             style="animation: doveFly 5s ease-in-out infinite alternate;">
+            <span class="dove text-2xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">🕊️</span>
+            <span class="dove text-2xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] transform scale-x-[-1]">🕊️</span>
+        </div>
+
+        <!-- 6. Lampu / Lantern di Kiri & Kanan Bawah -->
+        <div class="lantern lantern-left absolute bottom-[55px] left-4 w-11 h-20 z-7 flex flex-col items-center pointer-events-none transition-all duration-700"
+             :class="isCurtainOpening ? 'opacity-0 -translate-x-10' : 'opacity-100'"
+             style="animation: floatLantern 4s ease-in-out infinite alternate;">
+            <div class="lantern-bulb w-6 h-9 bg-[#f4f7f4] rounded-t-xl rounded-b-md shadow-[0_0_25px_12px_rgba(182,205,185,0.8),0_0_50px_20px_rgba(111,149,117,0.4)]"
+                 style="animation: pulseGlow 2.5s infinite alternate;"></div>
+            <div class="lantern-stand w-[3px] h-11 bg-gradient-to-b from-[#6F9575] to-[#233327]"></div>
+        </div>
+
+        <div class="lantern lantern-right absolute bottom-[55px] right-4 w-11 h-20 z-7 flex flex-col items-center pointer-events-none transition-all duration-700"
+             :class="isCurtainOpening ? 'opacity-0 translate-x-10' : 'opacity-100'"
+             style="animation: floatLantern 4s ease-in-out infinite alternate; animation-delay: -2s;">
+            <div class="lantern-bulb w-6 h-9 bg-[#f4f7f4] rounded-t-xl rounded-b-md shadow-[0_0_25px_12px_rgba(182,205,185,0.8),0_0_50px_20px_rgba(111,149,117,0.4)]"
+                 style="animation: pulseGlow 2.5s infinite alternate;"></div>
+            <div class="lantern-stand w-[3px] h-11 bg-gradient-to-b from-[#6F9575] to-[#233327]"></div>
+        </div>
+
+        <!-- 7. KONTEN UTAMA: Nama di Tengah (Center), Tanggal & Tamu di Bawah (Bottom) -->
+        <div class="content relative inset-0 z-10 flex flex-col justify-between items-center text-center p-4 sm:p-6 w-full h-full text-[#F4F7F4] pointer-events-auto">
+            
+            <!-- BAGIAN TENGAH: Sub-Title & Nama Mempelai di Tengah Layar (Diturunkan lebih nyaman di area bebas) -->
+            <div class="middle-section my-auto flex flex-col items-center justify-center pt-20 sm:pt-24 translate-y-8 sm:translate-y-12">
+                <!-- Sub-Title -->
+                <p class="sub-title font-display text-[0.85rem] sm:text-[0.95rem] tracking-[6px] uppercase text-[#F4F7F4] font-bold mb-1 text-sage-shadow"
+                   style="animation: fadeInUp 1.2s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+                    <span x-text="t('cover_sub')">The Wedding of</span>
+                </p>
+                
+                <!-- Names Wrapper (Vivid High-Contrast Sage-Gold Gradient) -->
+                <div class="names-wrapper my-1"
+                     style="animation: fadeInUpScale 1.4s 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+                    <h1 class="name font-script text-6xl sm:text-7xl md:text-8xl font-bold leading-[1.15] text-gold-gradient py-1">
+                        Ramazan
+                    </h1>
+                    <span class="ampersand font-display text-2xl sm:text-3xl text-[#F4F7F4] my-[-4px] block font-light italic text-sage-shadow">
+                        &
+                    </span>
+                    <h1 class="name font-script text-6xl sm:text-7xl md:text-8xl font-bold leading-[1.15] text-gold-gradient py-1">
+                        Dede
+                    </h1>
+                </div>
+            </div>
+
+            <!-- BAGIAN BAWAH: Tanggal Acara, Kartu Tamu & Tombol Buka Undangan -->
+            <div class="bottom-section pb-6 sm:pb-8 w-full flex flex-col items-center gap-2">
+                <!-- Date Badge (High Contrast Pill) -->
+                <div class="date-badge font-display text-xs sm:text-[0.85rem] tracking-[3px] py-1.5 px-5 rounded-full bg-[#162119]/75 backdrop-blur-md border border-[#6F9575]/80 text-[#F4F7F4] font-bold uppercase shadow-lg text-sage-shadow"
+                     style="animation: fadeIn 1.2s 1.2s forwards;">
+                    <span x-text="t('event_date_badge')">Ahad, 20 SEPTEMBER 2026</span>
+                </div>
+
+                <!-- Guest Card -->
+                <div class="w-[90%] max-w-xs bg-[#162119]/75 backdrop-blur-md border border-[#6F9575]/70 rounded-2xl p-3 my-0.5 shadow-2xl transition-all duration-700"
+                     :class="isCurtainOpening ? 'opacity-0 translate-y-6 pointer-events-none' : 'opacity-100'"
+                     style="animation: fadeInUp 1.2s 1.3s forwards;">
+                    <p class="text-[10px] text-[#B6CDB9] uppercase tracking-wider font-sans font-semibold mb-0.5">
+                        <span x-text="t('dear')">Kepada Yth. Bapak/Ibu/Saudara/i:</span>
+                    </p>
+                    <h3 class="text-base sm:text-lg font-serif font-bold text-[#F4F7F4] text-sage-shadow"
+                        x-text="guestName && guestName !== 'Tamu Undangan & Kerabat' ? guestName : t('dear_fallback')">
+                        Tamu Undangan &amp; Kerabat
+                    </h3>
+                </div>
+
+                <!-- Interactive Open Button -->
+                <button 
+                    @click="openInvitation()"
+                    type="button"
+                    :disabled="isCurtainOpening"
+                    class="btn-open font-display tracking-[2px] text-xs font-bold uppercase py-3 px-8 bg-gradient-to-r from-[#6F9575] via-[#85AB8B] to-[#57795C] text-white border-none rounded-full cursor-pointer shadow-[0_0_30px_rgba(111,149,117,0.7)] hover:shadow-[0_0_40px_rgba(182,205,185,0.9)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2 mt-1 disabled:opacity-50"
+                    :class="isCurtainOpening ? 'opacity-0 translate-y-8 pointer-events-none' : 'opacity-100'"
+                    style="animation: fadeInUp 1.2s 1.5s forwards;">
+                    <span>✉️</span> <span x-text="t('open_invitation')">Buka Undangan</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+        <!-- 2. Main Invitation Content Flow (Revealed after curtains open) -->
+        <main x-show="isOpened" 
+              x-transition:enter="transition ease-out duration-700"
+              x-transition:enter-start="opacity-0"
+              x-transition:enter-end="opacity-100"
+              class="relative z-10">
+
+            <!-- Hero Section: Identik Sama Persis dengan Cover Undangan (Membedakan hanya Scroll Indicator di Bawah) -->
+            <section class="relative w-full max-w-[430px] h-[100dvh] min-h-[100dvh] max-h-[932px] mx-auto flex flex-col justify-between items-center text-center p-4 sm:p-6 overflow-hidden bg-cover bg-center shadow-2xl rounded-none sm:rounded-2xl bg-[#162119]">
+                
+                <!-- 1. Background Cartoon Couple Cover Layer -->
+                <div class="bg-palace absolute inset-0 z-1 bg-cover bg-center pointer-events-none"
+                     style="background-image: url('/images/cartoon_couple_cover.webp');">
+                    <!-- Dark Vignette for High Text Readability -->
+                    <div class="absolute inset-0 bg-gradient-to-b from-[#162119]/60 via-[#162119]/25 to-[#162119]/80"></div>
+                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(22,33,25,0.45)_0%,rgba(22,33,25,0.1)_55%,rgba(22,33,25,0.65)_100%)]"></div>
+                </div>
+
+                <!-- 2. Sunlight Glow Overlay -->
+                <div class="sunlight-overlay absolute inset-0 z-2 pointer-events-none"
+                     style="background: radial-gradient(circle at 50% 25%, rgba(244, 247, 244, 0.25) 0%, rgba(111, 149, 117, 0.15) 60%, rgba(22,33,25,0.3) 100%);">
+                </div>
+
+                <!-- 3. Lengkungan Bunga & Pilar (Floral Arch Frame) Identik dengan Cover -->
+                <div class="arch-frame absolute inset-x-[5%] top-[5%] bottom-0 border-2 border-[#6F9575]/50 border-b-0 rounded-t-[180px] z-4 pointer-events-none shadow-[inset_0_0_20px_rgba(255,255,255,0.3)]"></div>
+
+                <!-- 4. Merpati Terbang (Doves) -->
+                <div class="dove-container absolute top-[6%] left-1/2 -translate-x-1/2 z-6 flex gap-8 pointer-events-none"
+                     style="animation: doveFly 5s ease-in-out infinite alternate;">
+                    <span class="dove text-2xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">🕊️</span>
+                    <span class="dove text-2xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] transform scale-x-[-1]">🕊️</span>
+                </div>
+
+                <!-- 5. Lampu / Lantern di Kiri & Kanan Bawah -->
+                <div class="lantern lantern-left absolute bottom-[55px] left-4 w-11 h-20 z-7 flex flex-col items-center pointer-events-none"
+                     style="animation: floatLantern 4s ease-in-out infinite alternate;">
+                    <div class="lantern-bulb w-6 h-9 bg-[#f4f7f4] rounded-t-xl rounded-b-md shadow-[0_0_25px_12px_rgba(182,205,185,0.8),0_0_50px_20px_rgba(111,149,117,0.4)]"
+                         style="animation: pulseGlow 2.5s infinite alternate;"></div>
+                    <div class="lantern-stand w-[3px] h-11 bg-gradient-to-b from-[#6F9575] to-[#233327]"></div>
+                </div>
+
+                <div class="lantern lantern-right absolute bottom-[55px] right-4 w-11 h-20 z-7 flex flex-col items-center pointer-events-none"
+                     style="animation: floatLantern 4s ease-in-out infinite alternate; animation-delay: -2s;">
+                    <div class="lantern-bulb w-6 h-9 bg-[#f4f7f4] rounded-t-xl rounded-b-md shadow-[0_0_25px_12px_rgba(182,205,185,0.8),0_0_50px_20px_rgba(111,149,117,0.4)]"
+                         style="animation: pulseGlow 2.5s infinite alternate;"></div>
+                    <div class="lantern-stand w-[3px] h-11 bg-gradient-to-b from-[#6F9575] to-[#233327]"></div>
+                </div>
+
+                <!-- 6. KONTEN UTAMA: Nama di Tengah (Center), Tanggal & Scroll di Bawah (Bottom) -->
+                <div class="content relative inset-0 z-10 flex flex-col justify-between items-center text-center w-full h-full text-[#F4F7F4] pointer-events-auto">
+                    
+                    <!-- BAGIAN TENGAH: Sub-Title & Nama Mempelai di Tengah Layar (Identik Persis dengan Cover) -->
+                    <div class="middle-section my-auto flex flex-col items-center justify-center pt-20 sm:pt-24 translate-y-8 sm:translate-y-12">
+                        <!-- Sub-Title -->
+                        <p class="sub-title font-display text-[0.85rem] sm:text-[0.95rem] tracking-[6px] uppercase text-[#F4F7F4] font-bold mb-1 text-sage-shadow">
+                            <span x-text="t('cover_sub')">The Wedding of</span>
+                        </p>
+                        
+                        <!-- Names Wrapper (Vivid High-Contrast Sage-Gold Gradient) -->
+                        <div class="names-wrapper my-1">
+                            <h1 class="name font-script text-6xl sm:text-7xl md:text-8xl font-bold leading-[1.15] text-gold-gradient py-1">
+                                Ramazan
+                            </h1>
+                            <span class="ampersand font-display text-2xl sm:text-3xl text-[#F4F7F4] my-[-4px] block font-light italic text-sage-shadow">
+                                &
+                            </span>
+                            <h1 class="name font-script text-6xl sm:text-7xl md:text-8xl font-bold leading-[1.15] text-gold-gradient py-1">
+                                Dede
+                            </h1>
+                        </div>
+                    </div>
+
+                    <!-- BAGIAN BAWAH: Tanggal Acara & Indikator Scroll ke Bawah -->
+                    <div class="bottom-section pb-6 sm:pb-8 w-full flex flex-col items-center gap-3">
+                        <!-- Date Badge (Identik dengan Cover) -->
+                        <div class="date-badge font-display text-xs sm:text-[0.85rem] tracking-[3px] py-1.5 px-5 rounded-full bg-[#162119]/75 backdrop-blur-md border border-[#6F9575]/80 text-[#F4F7F4] font-bold uppercase shadow-lg text-sage-shadow">
+                            <span x-text="t('event_date_badge')">Ahad, 20 SEPTEMBER 2026</span>
+                        </div>
+
+                        <!-- Bottom Floating Dainty Scroll Indicator Capsule -->
+                        <div class="relative z-10 animate-bounce opacity-90 pointer-events-none mt-1">
+                            <div class="px-3.5 py-1 rounded-full bg-[#162119]/60 backdrop-blur-sm border border-[#6F9575]/60 text-[#F4F7F4] text-[10px] font-sans font-medium uppercase tracking-[0.15em] shadow-md flex items-center gap-1.5 text-sage-shadow">
+                                <span x-text="t('scroll_down')">Scroll ke bawah</span>
+                                <svg class="w-3 h-3 text-[#B6CDB9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Remaining Invitation Sections (Enhanced with Paper Texture, Botanical Watermark & Ambient Glow Orbs) -->
+            <div class="bg-wedding-paper bg-botanical-pattern relative overflow-hidden py-8">
+                <!-- Ambient Glow Orbs for Soft 3D Lighting & Dimension -->
+                <div class="absolute -top-16 -left-16 w-80 h-80 rounded-full bg-[#B6CDB9]/35 blur-3xl pointer-events-none"></div>
+                <div class="absolute top-[18%] -right-20 w-96 h-96 rounded-full bg-[#6F9575]/15 blur-3xl pointer-events-none"></div>
+                <div class="absolute top-[38%] -left-20 w-96 h-96 rounded-full bg-[#D5E2D7]/40 blur-3xl pointer-events-none"></div>
+                <div class="absolute top-[58%] -right-20 w-96 h-96 rounded-full bg-[#B6CDB9]/25 blur-3xl pointer-events-none"></div>
+                <div class="absolute top-[78%] -left-20 w-96 h-96 rounded-full bg-[#6F9575]/15 blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 space-y-4">
+                    <!-- Bismillah & Ayat -->
+                    <section class="py-16 sm:py-20 px-6 max-w-3xl mx-auto text-center">
+    <!-- Arabic Bismillah & Salam -->
+    <div class="mb-8" data-reveal="fade-down">
+        <h2 class="font-arabic text-3xl sm:text-4xl text-[#314736] leading-relaxed mb-3 drop-shadow-sm" data-reveal="zoom-in" data-reveal-delay="100">
+            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+        </h2>
+        <p class="font-arabic text-xl sm:text-2xl text-[#57795c] leading-relaxed" data-reveal="fade-up" data-reveal-delay="200">
+            السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ
+        </p>
+    </div>
+
+    <!-- Quranic Verse in Luxury Sage-White Card with Corner Botanical Accents -->
+    <div class="relative bg-gradient-to-b from-white to-[#F4F7F4] border-2 border-[#D5E2D7] rounded-3xl p-6 sm:p-10 shadow-[0_10px_35px_rgba(111,149,117,0.12)] overflow-hidden" data-reveal="zoom-in" data-reveal-delay="300">
+        <!-- Inner Subtle Contour -->
+        <div class="absolute inset-2.5 rounded-2xl border border-[#6F9575]/15 pointer-events-none"></div>
+
+        <!-- Corner Botanical Leaf Accents -->
+        <svg class="absolute top-2 left-2 w-8 h-8 text-[#6F9575]/25 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+        <svg class="absolute bottom-2 right-2 w-8 h-8 text-[#6F9575]/25 pointer-events-none transform rotate-180" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+
+        <div class="w-16 h-1 bg-gradient-to-r from-transparent via-[#6F9575] to-transparent mx-auto mb-6 rounded-full"></div>
+
+        <blockquote class="italic font-serif text-base sm:text-lg text-[#233327] leading-relaxed mb-4 relative z-10"
+                    x-text="'“' + t('verse_quote') + '”'">
+            "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan berpasang-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang..."
+        </blockquote>
+
+        <p class="text-xs sm:text-sm font-semibold tracking-widest text-[#57795c] uppercase font-serif relative z-10"
+           x-text="t('verse_surah')">
+            QS. Ar-Rum: 21
+        </p>
+    </div>
+
+    <!-- Invitation Message -->
+    <p class="mt-8 text-sm sm:text-base text-[#425E47] leading-relaxed max-w-xl mx-auto font-sans" 
+       data-reveal="fade-up" data-reveal-delay="400"
+       x-text="t('invitation_intro')">
+        Dengan memohon Rahmat & Ridho Allah Subhanahu Wata'ala, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri dan memberikan do'a restu pada acara Pernikahan kami:
+    </p>
+</section>
+
+                    <!-- Section Divider -->
+                    <div class="flex items-center justify-center gap-3 my-6 max-w-xs sm:max-w-md mx-auto px-6 pointer-events-none opacity-85" data-reveal="zoom-in">
+    <div class="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#6F9575]/40 to-[#6F9575]/70"></div>
+    <div class="flex items-center gap-1.5 text-[#6F9575]">
+        <svg class="w-3.5 h-3.5 transform -rotate-45" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+        <div class="w-1.5 h-1.5 rounded-full bg-[#6F9575] shadow-[0_0_8px_rgba(111,149,117,0.8)]"></div>
+        <svg class="w-3.5 h-3.5 transform rotate-45 scale-x-[-1]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+    </div>
+    <div class="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#6F9575]/40 to-[#6F9575]/70"></div>
+</div>
+
+                    <!-- Profile Pasangan (Kartun) -->
+                    <section class="py-12 px-6 max-w-4xl mx-auto">
+    <div class="text-center mb-12" data-reveal="fade-down">
+        <p class="text-xs uppercase tracking-[0.3em] text-[#57795c] font-serif font-semibold mb-1" x-text="t('bismillah_sub')">Maha Suci Allah yang Menciptakan Pasangan</p>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-[#233327] mb-3" x-text="t('couple_title')">Kedua Mempelai</h2>
+        <div class="w-16 h-1 bg-gradient-to-r from-transparent via-[#6F9575] to-transparent mx-auto rounded-full"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+        <!-- Groom Card -->
+        <div class="relative bg-gradient-to-b from-white to-[#F4F7F4] border-2 border-[#D5E2D7] rounded-3xl p-8 text-center shadow-[0_10px_35px_rgba(111,149,117,0.12)] transition duration-300 hover:shadow-xl hover:border-[#6F9575] overflow-hidden" 
+             data-reveal="fade-right" data-reveal-delay="150">
+            <!-- Subtle Inner Arch Contour -->
+            <div class="absolute inset-2.5 rounded-2xl border border-[#6F9575]/15 pointer-events-none"></div>
+
+            <div class="relative w-48 h-48 mx-auto mb-6" data-reveal="zoom-in" data-reveal-delay="250">
+                <!-- Sage Floral Ring Halo -->
+                <div class="absolute inset-0 rounded-full border-2 border-dashed border-[#6F9575]/60 animate-spin-slow"></div>
+                <div class="absolute inset-2 rounded-full bg-gradient-to-tr from-[#6F9575] via-[#B6CDB9] to-[#314736] p-1 shadow-lg">
+                    <img 
+                        src="/images/cartoon_groom.webp" 
+                        alt="Ramazan Akcaalan" 
+                        class="w-full h-full object-cover rounded-full shadow-inner"
+                        loading="lazy">
+                </div>
+            </div>
+
+            <h3 class="font-serif text-2xl sm:text-3xl font-bold text-[#233327] mb-1" data-reveal="fade-up" data-reveal-delay="300">
+                Ramazan Akcaalan
+            </h3>
+            
+            <p class="text-xs font-semibold uppercase tracking-widest text-[#57795c] mb-4 font-serif" 
+               data-reveal="fade-up" data-reveal-delay="350"
+               x-text="t('groom_label')">
+                — Mempelai Pria —
+            </p>
+
+            <div class="text-sm text-[#526356] space-y-1 mb-6" data-reveal="fade-up" data-reveal-delay="400">
+                <p class="text-xs" x-text="t('groom_son_of')">Putra tercinta dari:</p>
+                <p class="font-bold text-[#233327]">Bpk. Ismail Akcaalan</p>
+                <p class="text-xs text-[#6F9575] font-serif italic">&</p>
+                <p class="font-bold text-[#233327]">Ibu Aysel Akcaalan</p>
+                <p class="text-xs text-[#314736] font-medium mt-2 bg-[#6F9575]/15 py-1 px-3 rounded-full inline-block" x-text="t('groom_origin')">Keluarga Istanbul, Turki</p>
+            </div>
+
+                                            <a href="https://instagram.com/Ramazanakcaalan._" target="_blank" rel="noopener noreferrer" 
+                    data-reveal="zoom-in" data-reveal-delay="450"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#D5E2D7] bg-white text-xs font-medium text-[#425E47] hover:text-[#233327] hover:border-[#6F9575] shadow-sm transition">
+                    <svg class="w-4 h-4 text-[#6F9575]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                    <span>&#64;Ramazanakcaalan._</span>
+                </a>
+                    </div>
+
+        <!-- Bride Card -->
+        <div class="relative bg-gradient-to-b from-white to-[#F4F7F4] border-2 border-[#D5E2D7] rounded-3xl p-8 text-center shadow-[0_10px_35px_rgba(111,149,117,0.12)] transition duration-300 hover:shadow-xl hover:border-[#6F9575] overflow-hidden"
+             data-reveal="fade-left" data-reveal-delay="200">
+            <!-- Subtle Inner Arch Contour -->
+            <div class="absolute inset-2.5 rounded-2xl border border-[#6F9575]/15 pointer-events-none"></div>
+            <div class="relative w-48 h-48 mx-auto mb-6" data-reveal="zoom-in" data-reveal-delay="300">
+                <!-- Sage Floral Ring Halo -->
+                <div class="absolute inset-0 rounded-full border-2 border-dashed border-[#6F9575]/60 animate-spin-slow"></div>
+                <div class="absolute inset-2 rounded-full bg-gradient-to-tr from-[#314736] via-[#B6CDB9] to-[#6F9575] p-1 shadow-lg">
+                    <img 
+                        src="/images/cartoon_bride.webp" 
+                        alt="Dede Sobariah" 
+                        class="w-full h-full object-cover rounded-full shadow-inner"
+                        loading="lazy">
+                </div>
+            </div>
+
+            <h3 class="font-serif text-2xl sm:text-3xl font-bold text-[#233327] mb-1" data-reveal="fade-up" data-reveal-delay="350">
+                Dede Sobariah
+            </h3>
+            
+            <p class="text-xs font-semibold uppercase tracking-widest text-[#57795c] mb-4 font-serif" 
+               data-reveal="fade-up" data-reveal-delay="400"
+               x-text="t('bride_label')">
+                — Mempelai Wanita —
+            </p>
+
+            <div class="text-sm text-[#526356] space-y-1 mb-6" data-reveal="fade-up" data-reveal-delay="450">
+                <p class="text-xs" x-text="t('bride_daughter_of')">Putri tercinta dari:</p>
+                <p class="font-bold text-[#233327]">Bpk. Endeng Zenal Arifin</p>
+                <p class="text-xs text-[#6F9575] font-serif italic">&</p>
+                <p class="font-bold text-[#233327]">Ibu Ipah Saripah</p>
+                <p class="text-xs text-[#314736] font-medium mt-2 bg-[#6F9575]/15 py-1 px-3 rounded-full inline-block" x-text="t('bride_origin')">Keluarga Garut, Indonesia</p>
+            </div>
+
+                                            <a href="https://instagram.com/Hayira_Bohs" target="_blank" rel="noopener noreferrer" 
+                    data-reveal="zoom-in" data-reveal-delay="500"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#D5E2D7] bg-white text-xs font-medium text-[#425E47] hover:text-[#233327] hover:border-[#6F9575] shadow-sm transition">
+                    <svg class="w-4 h-4 text-[#6F9575]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                    <span>&#64;Hayira_Bohs</span>
+                </a>
+                    </div>
+    </div>
+</section>
+
+                    <!-- Section Divider -->
+                    <div class="flex items-center justify-center gap-3 my-6 max-w-xs sm:max-w-md mx-auto px-6 pointer-events-none opacity-85" data-reveal="zoom-in">
+    <div class="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#6F9575]/40 to-[#6F9575]/70"></div>
+    <div class="flex items-center gap-1.5 text-[#6F9575]">
+        <svg class="w-3.5 h-3.5 transform -rotate-45" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+        <div class="w-1.5 h-1.5 rounded-full bg-[#6F9575] shadow-[0_0_8px_rgba(111,149,117,0.8)]"></div>
+        <svg class="w-3.5 h-3.5 transform rotate-45 scale-x-[-1]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+    </div>
+    <div class="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#6F9575]/40 to-[#6F9575]/70"></div>
+</div>
+
+                    <!-- Rangkaian Acara & Countdown -->
+                    <section class="py-16 px-4 sm:px-6 max-w-5xl mx-auto">
+    <div class="text-center mb-10" data-reveal="fade-down">
+        <p class="text-xs uppercase tracking-[0.3em] text-[#57795c] font-serif font-semibold mb-1" x-text="t('save_the_date')">Save The Date</p>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-[#233327] mb-3" x-text="t('event_title')">Rangkaian Acara</h2>
+        <div class="w-16 h-1 bg-gradient-to-r from-transparent via-[#6F9575] to-transparent mx-auto rounded-full mt-2"></div>
+    </div>
+
+    <!-- Countdown Timer Embed (Countdown to Akad start at 10:00 WIB) -->
+    <div class="mb-12" data-reveal="zoom-in" data-reveal-delay="200">
+        <div x-data="{
+        target: new Date('2026-09-20T10:00:00+07:00').getTime(),
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        isExpired: false,
+        updateCountdown() {
+            const now = new Date().getTime();
+            const distance = this.target - now;
+
+            if (distance < 0) {
+                this.isExpired = true;
+                this.days = 0;
+                this.hours = 0;
+                this.minutes = 0;
+                this.seconds = 0;
+                return;
+            }
+
+            this.days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            this.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            this.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            this.seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        },
+        init() {
+            this.updateCountdown();
+            setInterval(() => this.updateCountdown(), 1000);
+        }
+    }"
+    class="max-w-md mx-auto">
+    
+    <div class="grid grid-cols-4 gap-2 sm:gap-4 text-center">
+        <!-- Days -->
+        <div class="bg-gradient-to-b from-white to-[#F4F7F4] border-2 border-[#D5E2D7] rounded-2xl p-3 sm:p-4 shadow-[0_4px_15px_rgba(111,149,117,0.15)] transform transition duration-300 hover:scale-105"
+             data-reveal="zoom-in" data-reveal-delay="100">
+            <span class="block font-serif text-2xl sm:text-3xl font-bold text-[#233327]" x-text="days">0</span>
+            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-[#57795c] font-serif font-semibold" x-text="t('days')">Hari</span>
+        </div>
+
+        <!-- Hours -->
+        <div class="bg-gradient-to-b from-white to-[#F4F7F4] border-2 border-[#D5E2D7] rounded-2xl p-3 sm:p-4 shadow-[0_4px_15px_rgba(111,149,117,0.15)] transform transition duration-300 hover:scale-105"
+             data-reveal="zoom-in" data-reveal-delay="200">
+            <span class="block font-serif text-2xl sm:text-3xl font-bold text-[#233327]" x-text="hours">0</span>
+            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-[#57795c] font-serif font-semibold" x-text="t('hours')">Jam</span>
+        </div>
+
+        <!-- Minutes -->
+        <div class="bg-gradient-to-b from-white to-[#F4F7F4] border-2 border-[#D5E2D7] rounded-2xl p-3 sm:p-4 shadow-[0_4px_15px_rgba(111,149,117,0.15)] transform transition duration-300 hover:scale-105"
+             data-reveal="zoom-in" data-reveal-delay="300">
+            <span class="block font-serif text-2xl sm:text-3xl font-bold text-[#233327]" x-text="minutes">0</span>
+            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-[#57795c] font-serif font-semibold" x-text="t('minutes')">Menit</span>
+        </div>
+
+        <!-- Seconds -->
+        <div class="bg-gradient-to-b from-white to-[#F4F7F4] border-2 border-[#D5E2D7] rounded-2xl p-3 sm:p-4 shadow-[0_4px_15px_rgba(111,149,117,0.15)] transform transition duration-300 hover:scale-105"
+             data-reveal="zoom-in" data-reveal-delay="400">
+            <span class="block font-serif text-2xl sm:text-3xl font-bold text-[#233327]" x-text="seconds">0</span>
+            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-[#57795c] font-serif font-semibold" x-text="t('seconds')">Detik</span>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <!-- Dual Event Cards Grid (Akad Nikah & Walimatul 'Urs) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-10">
+        
+        <!-- 1. Card Akad Nikah -->
+        <div class="relative bg-gradient-to-b from-white to-[#F4F7F4] border-2 border-[#D5E2D7] rounded-3xl p-6 sm:p-8 shadow-[0_10px_35px_rgba(111,149,117,0.12)] hover:border-[#6F9575] hover:shadow-xl transition duration-300 overflow-hidden text-center flex flex-col justify-between"
+             data-reveal="fade-right" data-reveal-delay="300">
+            <!-- Subtle Inner Arch Contour -->
+            <div class="absolute inset-2.5 rounded-2xl border border-[#6F9575]/15 pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <!-- Icon Badge -->
+                <div class="w-14 h-14 rounded-full bg-[#6F9575]/15 border border-[#6F9575]/30 flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm">
+                    💍
+                </div>
+
+                <span class="inline-block px-4 py-1 rounded-full bg-[#6F9575]/15 border border-[#6F9575]/30 text-[#314736] text-[11px] font-serif font-bold uppercase tracking-widest mb-2"
+                      x-text="t('akad_badge')">
+                    Akad Nikah
+                </span>
+
+                <h3 class="font-serif text-2xl sm:text-3xl font-bold text-[#233327] mb-2" x-text="t('akad_title')">
+                    Akad Nikah
+                </h3>
+
+                <div class="w-12 h-1 bg-gradient-to-r from-transparent via-[#6F9575] to-transparent mx-auto mb-5 rounded-full"></div>
+
+                <div class="space-y-3 mb-6">
+                    <p class="text-xl sm:text-2xl font-serif font-bold text-[#233327]" x-text="t('event_date_badge')">
+                        Ahad, 20 September 2026
+                    </p>
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#6F9575]/15 border border-[#6F9575]/30 text-xs sm:text-sm font-semibold text-[#233327] font-sans">
+                        <svg class="w-4 h-4 text-[#57795c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span x-text="t('akad_time')">Pukul 10.00 - 11.00 WIB</span>
+                    </div>
+                </div>
+
+                <div class="border-t border-[#D5E2D7] pt-5 text-center">
+                    <p class="text-[11px] uppercase tracking-widest text-[#57795c] font-serif font-bold mb-1" x-text="t('venue_label')">Bertempat di:</p>
+                    <h4 class="text-base sm:text-lg font-bold font-serif text-[#233327] mb-1.5">Rumah Makan Leila</h4>
+                    <p class="text-xs sm:text-sm text-[#526356] leading-relaxed font-sans max-w-xs mx-auto">
+                        Jl. Raya Garut – Cikajang No. 22, Mekarsari, Kec. Cikajang, Kabupaten Garut, Jawa Barat 44171
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Card Walimatul 'Urs -->
+        <div class="relative bg-gradient-to-b from-white to-[#F4F7F4] border-2 border-[#D5E2D7] rounded-3xl p-6 sm:p-8 shadow-[0_10px_35px_rgba(111,149,117,0.12)] hover:border-[#6F9575] hover:shadow-xl transition duration-300 overflow-hidden text-center flex flex-col justify-between"
+             data-reveal="fade-left" data-reveal-delay="400">
+            <!-- Subtle Inner Arch Contour -->
+            <div class="absolute inset-2.5 rounded-2xl border border-[#6F9575]/15 pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <!-- Icon Badge -->
+                <div class="w-14 h-14 rounded-full bg-[#6F9575]/15 border border-[#6F9575]/30 flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm">
+                    🌸
+                </div>
+
+                <span class="inline-block px-4 py-1 rounded-full bg-[#6F9575]/15 border border-[#6F9575]/30 text-[#314736] text-[11px] font-serif font-bold uppercase tracking-widest mb-2"
+                      x-text="t('walimah_badge')">
+                    Walimah / Resepsi
+                </span>
+
+                <h3 class="font-serif text-2xl sm:text-3xl font-bold text-[#233327] mb-2" x-text="t('walimah_title')">
+                    Walimatul &#039;Urs
+                </h3>
+
+                <div class="w-12 h-1 bg-gradient-to-r from-transparent via-[#6F9575] to-transparent mx-auto mb-5 rounded-full"></div>
+
+                <div class="space-y-3 mb-6">
+                    <p class="text-xl sm:text-2xl font-serif font-bold text-[#233327]" x-text="t('event_date_badge')">
+                        Ahad, 20 September 2026
+                    </p>
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#6F9575]/15 border border-[#6F9575]/30 text-xs sm:text-sm font-semibold text-[#233327] font-sans">
+                        <svg class="w-4 h-4 text-[#57795c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span x-text="t('walimah_time')">Pukul 11.00 - 15.00 WIB</span>
+                    </div>
+                </div>
+
+                <div class="border-t border-[#D5E2D7] pt-5 text-center">
+                    <p class="text-[11px] uppercase tracking-widest text-[#57795c] font-serif font-bold mb-1" x-text="t('venue_label')">Bertempat di:</p>
+                    <h4 class="text-base sm:text-lg font-bold font-serif text-[#233327] mb-1.5">Rumah Makan Leila</h4>
+                    <p class="text-xs sm:text-sm text-[#526356] leading-relaxed font-sans max-w-xs mx-auto">
+                        Jl. Raya Garut – Cikajang No. 22, Mekarsari, Kec. Cikajang, Kabupaten Garut, Jawa Barat 44171
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Actions Bar -->
+    <div class="flex flex-wrap justify-center gap-4" data-reveal="zoom-in" data-reveal-delay="500">
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Pernikahan+Ramazan+%26+Dede&amp;dates=20260920T030000Z/20260920T080000Z&amp;details=Akad+Nikah%3A+10.00+-+11.00+WIB%0AWalimatul+%27Urs%3A+11.00+-+15.00+WIB%0ABertempat+di%3A+Rumah+Makan+Leila%2C+Jl.+Raya+Garut+%E2%80%93+Cikajang+No.+22%2C+Mekarsari%2C+Kec.+Cikajang%2C+Kabupaten+Garut%2C+Jawa+Barat+44171&amp;location=Rumah+Makan+Leila%2C+Jl.+Raya+Garut+%E2%80%93+Cikajang+No.+22%2C+Mekarsari%2C+Kec.+Cikajang%2C+Kabupaten+Garut%2C+Jawa+Barat+44171" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#6F9575] via-[#85AB8B] to-[#57795C] hover:from-[#57795C] hover:to-[#425E47] text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition duration-200 hover:scale-105">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <span x-text="t('cal_btn')">Simpan ke Google Calendar</span>
+        </a>
+
+        <a href="https://share.google/yFV64kCwHfucu2xOl" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white border-2 border-[#6F9575] hover:bg-[#6F9575]/10 text-[#233327] font-bold text-xs sm:text-sm shadow-md transition duration-200 hover:scale-105">
+            <svg class="w-4 h-4 text-[#57795c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            <span x-text="t('maps_btn')">Buka Google Maps</span>
+        </a>
+    </div>
+</section>
+
+
+                    <!-- Section Divider -->
+                    <div class="flex items-center justify-center gap-3 my-6 max-w-xs sm:max-w-md mx-auto px-6 pointer-events-none opacity-85" data-reveal="zoom-in">
+    <div class="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#6F9575]/40 to-[#6F9575]/70"></div>
+    <div class="flex items-center gap-1.5 text-[#6F9575]">
+        <svg class="w-3.5 h-3.5 transform -rotate-45" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+        <div class="w-1.5 h-1.5 rounded-full bg-[#6F9575] shadow-[0_0_8px_rgba(111,149,117,0.8)]"></div>
+        <svg class="w-3.5 h-3.5 transform rotate-45 scale-x-[-1]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+    </div>
+    <div class="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#6F9575]/40 to-[#6F9575]/70"></div>
+</div>
+
+                    <!-- Peta Lokasi Google Maps -->
+                    <section class="py-16 px-6 max-w-4xl mx-auto">
+    <div class="text-center mb-10" data-reveal="fade-down">
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-[#233327] mb-3" x-text="t('maps_title')">Peta Lokasi</h2>
+        <p class="text-xs uppercase tracking-widest text-[#57795c] font-semibold" x-text="t('maps_subtitle')">Location & Directions</p>
+        <div class="w-16 h-1 bg-[#6F9575] mx-auto rounded-full mt-3"></div>
+    </div>
+
+    <div class="bg-white border-2 border-[#D5E2D7] rounded-3xl p-4 sm:p-6 shadow-[0_10px_30px_rgba(111,149,117,0.12)] overflow-hidden"
+         data-reveal="zoom-in" data-reveal-delay="200">
+        <!-- Google Maps Iframe Container -->
+        <div class="relative w-full h-72 sm:h-96 rounded-2xl overflow-hidden shadow-inner mb-6 bg-gray-100"
+             data-reveal="fade-up" data-reveal-delay="300">
+            <iframe 
+                src="https://www.google.com/maps?q=Rumah+Makan+Leila+Cikajang+Garut&amp;output=embed" 
+                class="absolute inset-0 w-full h-full border-0" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 px-2"
+             data-reveal="fade-up" data-reveal-delay="400">
+            <div class="text-center sm:text-left">
+                <h4 class="font-bold text-[#233327] text-base">Rumah Makan Leila</h4>
+                <p class="text-xs text-[#526356] max-w-md">Jl. Raya Garut – Cikajang No. 22, Mekarsari, Kec. Cikajang, Kabupaten Garut, Jawa Barat 44171</p>
+            </div>
+
+            <a href="https://share.google/yFV64kCwHfucu2xOl" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#6F9575] via-[#85AB8B] to-[#57795C] hover:from-[#57795C] hover:to-[#425E47] text-white text-xs sm:text-sm font-semibold shadow-md transition duration-200 shrink-0">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                </svg>
+                <span x-text="t('maps_dir_btn')">Petunjuk Arah (Google Maps)</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+                    <!-- Section Divider -->
+                    <div class="flex items-center justify-center gap-3 my-6 max-w-xs sm:max-w-md mx-auto px-6 pointer-events-none opacity-85" data-reveal="zoom-in">
+    <div class="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#6F9575]/40 to-[#6F9575]/70"></div>
+    <div class="flex items-center gap-1.5 text-[#6F9575]">
+        <svg class="w-3.5 h-3.5 transform -rotate-45" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+        <div class="w-1.5 h-1.5 rounded-full bg-[#6F9575] shadow-[0_0_8px_rgba(111,149,117,0.8)]"></div>
+        <svg class="w-3.5 h-3.5 transform rotate-45 scale-x-[-1]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+    </div>
+    <div class="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#6F9575]/40 to-[#6F9575]/70"></div>
+</div>
+
+                    <!-- Form RSVP -->
+                    <section id="rsvp-section" class="py-16 px-6 max-w-2xl mx-auto">
+    <div class="text-center mb-10" data-reveal="fade-down">
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-[#233327] mb-3" x-text="t('rsvp_title')">Konfirmasi Kehadiran</h2>
+        <p class="text-xs uppercase tracking-widest text-[#57795c] font-semibold" x-text="t('rsvp_subtitle')">RSVP</p>
+        <div class="w-16 h-1 bg-[#6F9575] mx-auto rounded-full mt-3"></div>
+        <p class="text-xs sm:text-sm text-[#526356] mt-4 font-sans" data-reveal="fade-up" data-reveal-delay="150" x-text="t('rsvp_desc')">
+            Mohon konfirmasi kehadiran Bapak/Ibu/Saudara/i untuk membantu kelancaran persiapan acara.
+        </p>
+    </div>
+
+    <div x-data="{
+            guestId: null,
+            rsvpName: 'Tamu Undangan &amp; Kerabat',
+            attendance: 'hadir',
+            totalGuest: 1,
+            notes: '',
+            loading: false,
+            submitted: false,
+            statusMessage: '',
+            init() {
+                if (!this.rsvpName && this.guestName && this.guestName !== 'Tamu Undangan & Kerabat') {
+                    this.rsvpName = this.guestName;
+                }
+            },
+            async submitRsvp() {
+                if (!this.rsvpName.trim()) {
+                    window.showToast(this.t('rsvp_name_label') + ' tidak boleh kosong.', 'error');
+                    return;
+                }
+                this.loading = true;
+                try {
+                    const res = await fetch('/rsvp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            guest_id: this.guestId,
+                            guest_name: this.rsvpName,
+                            attendance: this.attendance,
+                            total_guest: this.totalGuest,
+                            notes: this.notes
+                        })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        this.submitted = true;
+                        this.statusMessage = data.message;
+                        window.showToast(data.message, 'success');
+                    } else {
+                        window.showToast('Gagal menyimpan konfirmasi: ' + (data.message || 'Error validasi'), 'error');
+                    }
+                } catch (e) {
+                    window.showToast('Terjadi kesalahan jaringan.', 'error');
+                } finally {
+                    this.loading = false;
+                }
+            }
+        }"
+        data-reveal="zoom-in"
+        data-reveal-delay="200"
+        class="bg-white border-2 border-[#D5E2D7] rounded-3xl p-6 sm:p-10 shadow-[0_10px_30px_rgba(111,149,117,0.12)]">
+
+        <template x-if="submitted">
+            <div class="text-center py-6" data-reveal="fade-up">
+                <div class="w-16 h-16 bg-[#6F9575]/15 text-[#314736] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-[#6F9575]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-[#233327] mb-2" x-text="t('rsvp_confirmed')">Konfirmasi Diterima</h3>
+                <p class="text-sm text-[#526356] max-w-md mx-auto mb-6" x-text="statusMessage || t('rsvp_confirmed_desc')"></p>
+                <button 
+                    @click="submitted = false"
+                    type="button"
+                    class="text-xs text-[#57795c] underline hover:text-[#314736] font-medium cursor-pointer"
+                    x-text="t('rsvp_change')">
+                    Ubah Konfirmasi Kehadiran
+                </button>
+            </div>
+        </template>
+
+        <form x-show="!submitted" @submit.prevent="submitRsvp" class="space-y-6">
+            <!-- Guest Name (Always manual input, prefilled if present) -->
+            <div data-reveal="fade-up" data-reveal-delay="250">
+                <label class="block text-xs uppercase tracking-wider font-semibold text-[#526356] mb-2" x-text="t('rsvp_name_label')">Nama Tamu</label>
+                <input 
+                    type="text" 
+                    x-model="rsvpName" 
+                    required
+                    :placeholder="t('rsvp_name_placeholder')"
+                    class="w-full px-4 py-3 rounded-xl border border-[#D5E2D7] bg-[#F4F7F4] text-[#233327] text-sm focus:outline-none focus:border-[#6F9575] focus:ring-1 focus:ring-[#6F9575] transition">
+            </div>
+
+            <!-- Attendance Radio -->
+            <div data-reveal="fade-up" data-reveal-delay="300">
+                <label class="block text-xs uppercase tracking-wider font-semibold text-[#526356] mb-2" x-text="t('rsvp_att_label')">Konfirmasi Kehadiran</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <label class="flex flex-col items-center justify-center p-3 rounded-xl border cursor-pointer transition text-center"
+                           :class="attendance === 'hadir' ? 'border-[#6F9575] bg-[#6F9575]/15 text-[#233327] font-bold shadow-sm' : 'border-[#D5E2D7] text-[#526356] bg-white'">
+                        <input type="radio" value="hadir" x-model="attendance" class="sr-only">
+                        <span class="text-xs sm:text-sm" x-text="t('rsvp_att_hadir')">Hadir</span>
+                    </label>
+
+                    <label class="flex flex-col items-center justify-center p-3 rounded-xl border cursor-pointer transition text-center"
+                           :class="attendance === 'tidak_hadir' ? 'border-[#6F9575] bg-[#6F9575]/15 text-[#233327] font-bold shadow-sm' : 'border-[#D5E2D7] text-[#526356] bg-white'">
+                        <input type="radio" value="tidak_hadir" x-model="attendance" class="sr-only">
+                        <span class="text-xs sm:text-sm" x-text="t('rsvp_att_tidak')">Tidak Hadir</span>
+                    </label>
+
+                    <label class="flex flex-col items-center justify-center p-3 rounded-xl border cursor-pointer transition text-center"
+                           :class="attendance === 'ragu' ? 'border-[#6F9575] bg-[#6F9575]/15 text-[#233327] font-bold shadow-sm' : 'border-[#D5E2D7] text-[#526356] bg-white'">
+                        <input type="radio" value="ragu" x-model="attendance" class="sr-only">
+                        <span class="text-xs sm:text-sm" x-text="t('rsvp_att_ragu')">Masih Ragu</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Total Guest (Pax) -->
+            <div x-show="attendance === 'hadir'" data-reveal="fade-up" data-reveal-delay="350">
+                <label class="block text-xs uppercase tracking-wider font-semibold text-[#526356] mb-2" x-text="t('rsvp_pax_label')">Jumlah Tamu Hadir</label>
+                <select x-model="totalGuest" class="w-full px-4 py-3 rounded-xl border border-[#D5E2D7] bg-[#F4F7F4] text-[#233327] text-sm focus:outline-none focus:border-[#6F9575]">
+                    <option value="1" x-text="'1 ' + t('rsvp_person')">1 Orang</option>
+                    <option value="2" x-text="'2 ' + t('rsvp_person')">2 Orang</option>
+                    <option value="3" x-text="'3 ' + t('rsvp_person')">3 Orang</option>
+                    <option value="4" x-text="'4 ' + t('rsvp_person')">4 Orang</option>
+                    <option value="5" x-text="'5 ' + t('rsvp_person')">5 Orang</option>
+                </select>
+            </div>
+
+            <!-- Notes -->
+            <div data-reveal="fade-up" data-reveal-delay="400">
+                <label class="block text-xs uppercase tracking-wider font-semibold text-[#526356] mb-2" x-text="t('rsvp_notes_label')">Catatan Tambahan (Opsional)</label>
+                <textarea 
+                    x-model="notes" 
+                    rows="3" 
+                    :placeholder="t('rsvp_notes_placeholder')"
+                    class="w-full px-4 py-3 rounded-xl border border-[#D5E2D7] bg-[#F4F7F4] text-[#233327] text-sm focus:outline-none focus:border-[#6F9575]"></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                :disabled="loading"
+                data-reveal="zoom-in"
+                data-reveal-delay="450"
+                class="w-full py-3.5 rounded-full bg-gradient-to-r from-[#6F9575] via-[#85AB8B] to-[#57795C] hover:from-[#57795C] hover:to-[#425E47] text-white font-bold text-sm shadow-md transition duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
+                <svg x-show="loading" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span x-text="t('rsvp_submit')">Kirim Konfirmasi Kehadiran</span>
+            </button>
+        </form>
+    </div>
+</section>
+
+                    <!-- Section Divider -->
+                    <div class="flex items-center justify-center gap-3 my-6 max-w-xs sm:max-w-md mx-auto px-6 pointer-events-none opacity-85" data-reveal="zoom-in">
+    <div class="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#6F9575]/40 to-[#6F9575]/70"></div>
+    <div class="flex items-center gap-1.5 text-[#6F9575]">
+        <svg class="w-3.5 h-3.5 transform -rotate-45" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+        <div class="w-1.5 h-1.5 rounded-full bg-[#6F9575] shadow-[0_0_8px_rgba(111,149,117,0.8)]"></div>
+        <svg class="w-3.5 h-3.5 transform rotate-45 scale-x-[-1]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5 16 5 21C10 21 16 18 18 9C18 8.6 17.5 8 17 8Z"/>
+        </svg>
+    </div>
+    <div class="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#6F9575]/40 to-[#6F9575]/70"></div>
+</div>
+
+                    <!-- Buku Tamu / Ucapan -->
+                    <section class="py-16 px-6 max-w-2xl mx-auto">
+    <div class="text-center mb-10" data-reveal="fade-down">
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-[#233327] mb-3" x-text="t('gb_title')">Buku Tamu & Ucapan</h2>
+        <p class="text-xs uppercase tracking-widest text-[#57795c] font-semibold" x-text="t('gb_subtitle')">Wishes & Prayers</p>
+        <div class="w-16 h-1 bg-[#6F9575] mx-auto rounded-full mt-3"></div>
+        <p class="text-xs sm:text-sm text-[#526356] mt-4 font-sans" data-reveal="fade-up" data-reveal-delay="150" x-text="t('gb_desc')">
+            Tinggalkan do'a dan ucapan selamat bagi kedua mempelai.
+        </p>
+    </div>
+
+    <div x-data="{
+            guestId: null,
+            name: 'Tamu Undangan &amp; Kerabat',
+            message: '',
+            loading: false,
+            loadingPage: false,
+            currentPage: 1,
+            lastPage: 1,
+            total: 4,
+            items: [
+                                {
+                    id: 4,
+                    name: 'Sahabat &amp;amp; Kerabat Tercinta',
+                    message: 'Selamat menempuh hidup baru untuk Ramazan &amp;amp; Dede! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Barakallahu lakuma wa baraka alaikuma wa jama&amp;#039;a bainakuma fii khair.',
+                    time_ago: '2 hours ago'
+                },
+                                {
+                    id: 3,
+                    name: 'Bpk. Ismail Akcaalan &amp;amp; Keluarga',
+                    message: 'Selamat menempuh hidup baru untuk Ramazan &amp;amp; Dede! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Barakallahu lakuma wa baraka alaikuma wa jama&amp;#039;a bainakuma fii khair.',
+                    time_ago: '2 hours ago'
+                },
+                                {
+                    id: 2,
+                    name: 'Bpk. Endeng Zenal Arifin &amp;amp; Keluarga',
+                    message: 'Selamat menempuh hidup baru untuk Ramazan &amp;amp; Dede! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Barakallahu lakuma wa baraka alaikuma wa jama&amp;#039;a bainakuma fii khair.',
+                    time_ago: '2 hours ago'
+                },
+                                {
+                    id: 1,
+                    name: 'Keluarga Istanbul-Indo',
+                    message: 'Selamat menempuh hidup baru untuk Ramazan &amp;amp; Dede! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Barakallahu lakuma wa baraka alaikuma wa jama&amp;#039;a bainakuma fii khair.',
+                    time_ago: '2 hours ago'
+                },
+                            ],
+            init() {
+                if (!this.name && this.guestName && this.guestName !== 'Tamu Undangan & Kerabat') {
+                    this.name = this.guestName;
+                }
+            },
+            get visiblePages() {
+                const pages = [];
+                const total = this.lastPage;
+                const current = this.currentPage;
+                if (total <= 5) {
+                    for (let i = 1; i <= total; i++) pages.push(i);
+                } else {
+                    if (current <= 3) {
+                        pages.push(1, 2, 3, 4, '...', total);
+                    } else if (current >= total - 2) {
+                        pages.push(1, '...', total - 3, total - 2, total - 1, total);
+                    } else {
+                        pages.push(1, '...', current - 1, current, current + 1, '...', total);
+                    }
+                }
+                return pages;
+            },
+            async goToPage(page, force = false) {
+                if ((page < 1 || page > this.lastPage || page === this.currentPage) && !force) return;
+                if (this.loadingPage) return;
+                this.loadingPage = true;
+                try {
+                    const res = await fetch(`/guestbook?page=${page}`, {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    const json = await res.json();
+                    this.items = json.data;
+                    this.currentPage = json.current_page;
+                    this.lastPage = json.last_page;
+                    this.total = json.total;
+                } catch (e) {
+                    window.showToast('Gagal memuat halaman ucapan.', 'error');
+                } finally {
+                    this.loadingPage = false;
+                }
+            },
+            async submitMessage() {
+                if (!this.name.trim() || !this.message.trim()) {
+                    window.showToast(this.t('gb_name_label') + ' & ' + this.t('gb_msg_label') + ' wajib diisi.', 'error');
+                    return;
+                }
+                this.loading = true;
+                try {
+                    const res = await fetch('/guestbook', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            guest_id: this.guestId,
+                            name: this.name,
+                            message: this.message
+                        })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        this.message = '';
+                        window.showToast(data.message, 'success');
+                        await this.goToPage(1, true);
+                    } else {
+                        window.showToast('Gagal mengirim pesan: ' + (data.message || 'Error validasi'), 'error');
+                    }
+                } catch (e) {
+                    window.showToast('Terjadi kesalahan jaringan.', 'error');
+                } finally {
+                    this.loading = false;
+                }
+            }
+        }"
+        data-reveal="zoom-in"
+        data-reveal-delay="200"
+        class="bg-white border-2 border-[#D5E2D7] rounded-3xl p-6 sm:p-8 shadow-[0_10px_30px_rgba(111,149,117,0.12)]">
+
+        <!-- Form Submission -->
+        <form @submit.prevent="submitMessage" class="space-y-4 mb-8 pb-8 border-b border-[#D5E2D7]">
+            <div data-reveal="fade-up" data-reveal-delay="250">
+                <label class="block text-xs uppercase tracking-wider font-semibold text-[#526356] mb-1" x-text="t('gb_name_label')">Nama Anda</label>
+                <input 
+                    type="text" 
+                    x-model="name" 
+                    :placeholder="t('gb_name_placeholder')"
+                    required
+                    class="w-full px-4 py-2.5 rounded-xl border border-[#D5E2D7] bg-[#F4F7F4] text-[#233327] text-sm focus:outline-none focus:border-[#6F9575]">
+            </div>
+
+            <div data-reveal="fade-up" data-reveal-delay="300">
+                <label class="block text-xs uppercase tracking-wider font-semibold text-[#526356] mb-1" x-text="t('gb_msg_label')">Pesan & Do'a Restu</label>
+                <textarea 
+                    x-model="message" 
+                    rows="3" 
+                    :placeholder="t('gb_msg_placeholder')"
+                    required
+                    class="w-full px-4 py-2.5 rounded-xl border border-[#D5E2D7] bg-[#F4F7F4] text-[#233327] text-sm focus:outline-none focus:border-[#6F9575]"></textarea>
+            </div>
+
+            <button 
+                type="submit" 
+                :disabled="loading"
+                data-reveal="zoom-in"
+                data-reveal-delay="350"
+                class="w-full py-3 rounded-full bg-gradient-to-r from-[#6F9575] via-[#85AB8B] to-[#57795C] hover:from-[#57795C] hover:to-[#425E47] text-white font-bold text-xs sm:text-sm shadow-md transition duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
+                <svg x-show="loading" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span x-text="t('gb_submit')">Kirim Do'a & Ucapan</span>
+            </button>
+        </form>
+
+        <!-- Messages Feed Header -->
+        <div class="flex items-center justify-between mb-4 pb-2 border-b border-[#D5E2D7]/60">
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-[#3B5A40]" x-text="t('gb_feed_title')">Daftar Do'a & Ucapan</span>
+                <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#E5EFE7] text-[#3B5A40]" x-text="total + ' ' + t('gb_wishes_count')"></span>
+            </div>
+            <div x-show="lastPage > 1" class="text-[11px] text-[#57795C] font-medium">
+                <span x-text="t('gb_page')">Halaman</span> <span class="font-bold" x-text="currentPage"></span> <span x-text="t('gb_of')">dari</span> <span class="font-bold" x-text="lastPage"></span>
+            </div>
+        </div>
+
+        <!-- Messages Feed List Container -->
+        <div class="relative min-h-[120px]">
+            <!-- Loading overlay when changing page -->
+            <div x-show="loadingPage" 
+                 x-transition
+                 class="absolute inset-0 bg-white/75 backdrop-blur-[2px] z-10 flex items-center justify-center rounded-2xl">
+                <div class="flex items-center gap-2 text-xs font-medium text-[#3B5A40]">
+                    <svg class="animate-spin h-5 w-5 text-[#6F9575]" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span x-text="t('gb_loading')">Memuat ucapan...</span>
+                </div>
+            </div>
+
+            <!-- Messages List (5 items per page) -->
+            <div class="space-y-3.5" :class="loadingPage ? 'opacity-30' : 'opacity-100 transition-opacity duration-200'">
+                <template x-for="item in items" :key="item.id">
+                    <div class="bg-[#F4F7F4] border border-[#D5E2D7] rounded-2xl p-4 transition duration-200 hover:border-[#6F9575] hover:shadow-xs">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-[#6F9575] to-[#425E47] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs"
+                                     x-text="item.name ? item.name.charAt(0).toUpperCase() : '?'"></div>
+                                <h4 class="font-bold text-sm text-[#233327] truncate" x-text="item.name"></h4>
+                            </div>
+                            <span class="text-[10px] text-[#57795c] whitespace-nowrap shrink-0 font-medium" x-text="item.time_ago"></span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-[#526356] leading-relaxed font-sans pl-9" x-text="item.message"></p>
+                    </div>
+                </template>
+
+                <template x-if="items.length === 0 && !loadingPage">
+                    <div class="text-center py-8 text-xs text-[#526356] bg-[#F4F7F4] rounded-2xl border border-dashed border-[#D5E2D7]"
+                         x-text="t('gb_empty')">
+                        Belum ada ucapan. Jadilah yang pertama memberikan ucapan dan do'a restu!
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div x-show="lastPage > 1" class="mt-6 pt-5 border-t border-[#D5E2D7] flex flex-wrap items-center justify-between gap-3">
+            <!-- Tombol Halaman Sebelumnya -->
+            <button 
+                type="button"
+                @click="goToPage(currentPage - 1)"
+                :disabled="currentPage <= 1 || loadingPage"
+                class="px-3.5 py-1.5 rounded-full border border-[#D5E2D7] bg-white hover:bg-[#F4F7F4] text-[#233327] text-xs font-semibold transition disabled:opacity-35 disabled:cursor-not-allowed disabled:hover:bg-white flex items-center gap-1.5 shadow-xs cursor-pointer">
+                <svg class="w-3.5 h-3.5 text-[#57795C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                <span x-text="t('gb_prev')">Sebelumnya</span>
+            </button>
+
+            <!-- Quick Jump Page Number Buttons -->
+            <div class="flex items-center gap-1">
+                <template x-for="(p, idx) in visiblePages" :key="idx">
+                    <div class="inline-flex">
+                        <template x-if="p === '...'">
+                            <span class="w-7 h-7 flex items-center justify-center text-xs text-[#526356]">...</span>
+                        </template>
+                        <template x-if="p !== '...'">
+                            <button 
+                                type="button"
+                                @click="goToPage(p)"
+                                :disabled="loadingPage"
+                                :class="p === currentPage 
+                                    ? 'bg-gradient-to-r from-[#6F9575] to-[#57795C] text-white font-bold shadow-xs' 
+                                    : 'bg-white border border-[#D5E2D7] text-[#526356] hover:bg-[#F4F7F4] font-medium'"
+                                class="w-7 h-7 rounded-full text-xs transition flex items-center justify-center cursor-pointer"
+                                x-text="p">
+                            </button>
+                        </template>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Tombol Buka Paginasi Berikutnya -->
+            <button 
+                type="button"
+                @click="goToPage(currentPage + 1)"
+                :disabled="currentPage >= lastPage || loadingPage"
+                class="px-4 py-1.5 rounded-full bg-gradient-to-r from-[#6F9575] to-[#57795C] hover:from-[#57795C] hover:to-[#425E47] text-white text-xs font-semibold transition disabled:opacity-35 disabled:cursor-not-allowed shadow-xs flex items-center gap-1.5 cursor-pointer">
+                <span x-text="t('gb_next')">Berikutnya</span>
+                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>
+
+
+                    <!-- Footer -->
+                    <footer class="py-20 px-6 bg-gradient-to-t from-[#162119] via-[#233327] to-[#F4F7F4] text-[#F4F7F4] text-center mt-20 relative overflow-hidden">
+    <div class="max-w-xl mx-auto relative z-10 pt-10">
+        <p class="font-arabic text-2xl sm:text-3xl text-gold-gradient mb-4" data-reveal="zoom-in" data-reveal-delay="100">
+            جَزَاكُمُ اللَّهُ خَيْرًا كَثِيرًا
+        </p>
+
+        <p class="font-serif text-base sm:text-lg italic text-[#D5E2D7] mb-8 leading-relaxed" 
+           data-reveal="fade-up" data-reveal-delay="200"
+           x-text="'“' + t('closing_prayer') + '”'">
+            "Jazakumullahu khairan Katsiran"
+        </p>
+
+        <p class="text-xs uppercase tracking-[0.25em] text-[#B6CDB9] font-serif font-semibold mb-3" 
+           data-reveal="fade-up" data-reveal-delay="250"
+           x-text="t('happy_family')">
+            Kami yang berbahagia,
+        </p>
+
+        <div class="space-y-1 text-xs sm:text-sm text-[#D5E2D7] mb-8 font-serif" data-reveal="fade-up" data-reveal-delay="300">
+            <p class="font-bold text-[#F4F7F4]" x-text="t('groom_family')">Keluarga Bpk. Ismail Akcaalan & Ibu Aysel Akcaalan</p>
+            <p class="text-xs text-[#B6CDB9] italic">&</p>
+            <p class="font-bold text-[#F4F7F4]" x-text="t('bride_family')">Keluarga Bpk. Endeng Zenal Arifin & Ibu Ipah Saripah</p>
+        </div>
+
+        <h3 class="font-script text-6xl sm:text-7xl text-gold-gradient mb-8 drop-shadow-md" data-reveal="zoom-in" data-reveal-delay="350">
+            Ramazan & Dede
+        </h3>
+
+        <div class="border-t border-[#f4f7f4]/15 pt-6 text-[10px] sm:text-xs text-[#D5E2D7]/60 font-sans">
+            &copy; 2026 The Wedding of Ramazan & Dede. All rights reserved.
+        </div>
+    </div>
+</footer>
+                </div>
+            </div>
+        </main>
+
+        <!-- Floating Music Player Button -->
+        <!-- Always in DOM for Instant Autoplay Support Across Mobile & Desktop Browsers -->
+<audio 
+    id="wedding-audio"
+    x-ref="audioPlayer" 
+    src="/audio/wedding-nasheed.mp3" 
+    loop 
+    preload="auto"
+    class="hidden">
+</audio>
+
+<!-- Floating Audio Toggle Button (Revealed after opening invitation) -->
+<div 
+    x-show="isOpened"
+    x-transition:enter="transition ease-out duration-500 delay-300 transform"
+    x-transition:enter-start="opacity-0 scale-50"
+    x-transition:enter-end="opacity-100 scale-100"
+    class="fixed bottom-6 right-6 z-40">
+
+    <button 
+        @click="toggleAudio()" 
+        type="button"
+        class="group relative w-12 h-12 rounded-full bg-[#233327] border-2 border-[#6F9575] text-[#B6CDB9] shadow-2xl flex items-center justify-center cursor-pointer transition transform hover:scale-110 active:scale-95">
+        
+        <!-- Spinning Vinyl Disk Animation -->
+        <div class="absolute inset-0 rounded-full border border-[#6F9575]/40" :class="isPlaying ? 'animate-spin-slow' : ''"></div>
+
+        <!-- Music Note / Playing Icon -->
+        <svg x-show="isPlaying" class="w-5 h-5 text-[#B6CDB9]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+
+        <!-- Muted Icon -->
+        <svg x-show="!isPlaying" style="display: none;" class="w-5 h-5 text-[#D5E2D7]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+        </svg>
+    </button>
+</div>
+    </div>
+
+    <!-- Global Persistent Falling Leaves & Petals Canvas (Persistent overlay across all sections, cover, and on scroll) -->
+    <canvas id="global-falling-leaves-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-[60]"></canvas>
+
+    <!-- Global Floating Toast Notification -->
+    <div x-data="{
+            show: false,
+            message: '',
+            type: 'success',
+            timeout: null,
+            init() {
+                window.addEventListener('toast-notify', (e) => {
+                    this.message = e.detail.message;
+                    this.type = e.detail.type || 'success';
+                    this.show = true;
+                    clearTimeout(this.timeout);
+                    this.timeout = setTimeout(() => { this.show = false; }, 3500);
+                });
+            }
+         }"
+         x-show="show"
+         x-transition:enter="transition ease-out duration-300 transform"
+         x-transition:enter-start="opacity-0 translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200 transform"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 translate-y-4"
+         style="display: none;"
+         class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] max-w-sm w-[90%] sm:w-auto px-5 py-3 rounded-full shadow-2xl backdrop-blur-md text-sm font-medium flex items-center gap-2 border text-white"
+         :class="type === 'success' ? 'bg-[#314736]/95 border-[#6F9575]/60' : 'bg-red-900/95 border-red-500/50'">
+        <svg x-show="type === 'success'" class="w-5 h-5 text-[#B6CDB9] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <svg x-show="type !== 'success'" class="w-5 h-5 text-red-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span x-text="message"></span>
+    </div>
+
+    <!-- Global Falling Leaves & Petals Animation Script -->
+    <script>
+        (function() {
+            function initFallingPetals() {
+                const canvas = document.getElementById('global-falling-leaves-canvas');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+
+                let width = (canvas.width = window.innerWidth);
+                let height = (canvas.height = window.innerHeight);
+
+                function onResize() {
+                    width = canvas.width = window.innerWidth;
+                    height = canvas.height = window.innerHeight;
+                }
+                window.addEventListener('resize', onResize, { passive: true });
+
+                // Particles: Sage green leaves, white rose petals, and delicate soft sparkles
+                const particleCount = 38;
+                const particles = [];
+
+                for (let i = 0; i < particleCount; i++) {
+                    const typeRand = Math.random();
+                    let type = 'petal';
+                    let size = Math.random() * 6 + 4;
+                    let speedY = Math.random() * 0.9 + 0.5;
+                    let swaySpeed = Math.random() * 0.02 + 0.01;
+                    let rotSpeed = (Math.random() - 0.5) * 1.8;
+                    let alpha = Math.random() * 0.5 + 0.35;
+                    let color = 'rgba(255, 255, 255,';
+
+                    if (typeRand < 0.45) {
+                        // Sage Green Leaf
+                        type = 'leaf';
+                        size = Math.random() * 7 + 5;
+                        color = Math.random() > 0.5 ? 'rgba(111, 149, 117,' : 'rgba(145, 179, 149,';
+                    } else if (typeRand < 0.85) {
+                        // White Rose Petal
+                        type = 'petal';
+                        size = Math.random() * 7 + 4;
+                        color = 'rgba(255, 255, 255,';
+                    } else {
+                        // Soft Golden Shimmer
+                        type = 'sparkle';
+                        size = Math.random() * 2.5 + 1.5;
+                        speedY = Math.random() * 0.5 + 0.3;
+                        color = 'rgba(213, 226, 215,';
+                        alpha = Math.random() * 0.7 + 0.3;
+                    }
+
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        type,
+                        size,
+                        speedY,
+                        swaySpeed,
+                        swayAngle: Math.random() * Math.PI * 2,
+                        rotation: Math.random() * 360,
+                        rotSpeed,
+                        color,
+                        alpha,
+                        wind: (Math.random() - 0.5) * 0.3
+                    });
+                }
+
+                function drawLeaf(ctx, p) {
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.beginPath();
+                    ctx.moveTo(0, -p.size);
+                    ctx.quadraticCurveTo(p.size * 0.6, 0, 0, p.size);
+                    ctx.quadraticCurveTo(-p.size * 0.6, 0, 0, -p.size);
+                    ctx.fillStyle = `${p.color} ${p.alpha})`;
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.moveTo(0, -p.size * 0.8);
+                    ctx.lineTo(0, p.size * 0.8);
+                    ctx.strokeStyle = `rgba(35, 51, 39, ${p.alpha * 0.35})`;
+                    ctx.lineWidth = 0.6;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+
+                function drawPetal(ctx, p) {
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, p.size * 1.3, p.size * 0.8, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = `${p.color} ${p.alpha})`;
+                    ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
+                    ctx.shadowBlur = 4;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                function drawSparkle(ctx, p) {
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.beginPath();
+                    ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `${p.color} ${p.alpha})`;
+                    ctx.shadowColor = 'rgba(182, 205, 185, 0.8)';
+                    ctx.shadowBlur = 6;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                function render() {
+                    ctx.clearRect(0, 0, width, height);
+
+                    for (let i = 0; i < particles.length; i++) {
+                        const p = particles[i];
+                        p.y += p.speedY;
+                        p.swayAngle += p.swaySpeed;
+                        p.x += Math.sin(p.swayAngle) * 0.8 + p.wind;
+                        p.rotation += p.rotSpeed;
+
+                        if (p.y > height + 20) {
+                            p.y = -20;
+                            p.x = Math.random() * width;
+                        }
+                        if (p.x > width + 20) p.x = -20;
+                        if (p.x < -20) p.x = width + 20;
+
+                        if (p.type === 'leaf') {
+                            drawLeaf(ctx, p);
+                        } else if (p.type === 'petal') {
+                            drawPetal(ctx, p);
+                        } else {
+                            drawSparkle(ctx, p);
+                        }
+                    }
+
+                    requestAnimationFrame(render);
+                }
+
+                requestAnimationFrame(render);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initFallingPetals);
+            } else {
+                initFallingPetals();
+            }
+        })();
+    </script>
+</body>
+</html>
