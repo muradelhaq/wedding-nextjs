@@ -50,7 +50,7 @@ export async function invitationResponse(slug?: string) {
     .replaceAll("guestId: null", `guestId: ${guest.id ?? "null"}`)
     .replace(
       /rsvpName: '[^']*',\s+attendance: '[^']*',\s+totalGuest: \d+,\s+notes: '[^']*',\s+loading: false,\s+submitted: false,/,
-      `rsvpName: ${alpineValue(guest.name)},\n            attendance: ${alpineValue(guest.attendance || "hadir")},\n            totalGuest: ${guest.total_guest || 1},\n            notes: ${alpineValue(guest.notes || "")},\n            loading: false,\n            submitted: ${hasRsvp},`,
+      `rsvpName: ${alpineValue(guest.id ? guest.name : "")},\n            attendance: ${alpineValue(guest.attendance || "hadir")},\n            totalGuest: ${guest.total_guest || 1},\n            notes: ${alpineValue(guest.notes || "")},\n            loading: false,\n            submitted: ${hasRsvp},`,
     )
     .replace(
       /currentPage: 1,\s+lastPage: 1,\s+total: \d+,\s+items: \[[\s\S]*?\],\s+init\(\)/,
