@@ -7,10 +7,19 @@ export async function PUT(request: Request, { params }: { params: Promise<{ reso
   const { resource, id } = await params;
   if (!isAdminResource(resource) || !/^\d+$/.test(id)) return Response.json({ message: "Not found" }, { status: 404 });
   const body = await request.json();
+
+  if (resource === "guests" && (body.slug || body.name)) {
+    const { generateUniqueGuestSlug } = await import("@/lib/slug-helper");
+    body.slug = await generateUniqueGuestSlug(body.name || "", body.slug, Number(id));
+  }
+
   const columns = resources[resource].columns.filter((column) => column in body);
-  const values = columns.map((column) => body[column] === "" ? null : body[column]);
+  const values = columns.map((column) => (body[column] === "" ? null : body[column]));
   const setters = columns.map((column, index) => `${column}=$${index + 1}`).join(",");
-  const [row] = await query(`update ${resource} set ${setters},updated_at=now() where id=$${columns.length + 1} returning *`, [...values, Number(id)]);
+  const [row] = await query(
+    `update ${resource} set ${setters},updated_at=now() where id=$${columns.length + 1} returning *`,
+    [...values, Number(id)],
+  );
   return Response.json(row);
 }
 

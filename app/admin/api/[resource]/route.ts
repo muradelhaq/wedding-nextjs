@@ -16,10 +16,24 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
   const { resource } = await params;
   if (!isAdminResource(resource)) return Response.json({ message: "Not found" }, { status: 404 });
   const body = await request.json();
+
+  if (resource === "guests") {
+    const guestName = String(body.name || "").trim();
+    if (!guestName) {
+      return Response.json({ message: "Nama tamu wajib diisi." }, { status: 422 });
+    }
+    const { generateUniqueGuestSlug } = await import("@/lib/slug-helper");
+    body.slug = await generateUniqueGuestSlug(guestName, body.slug);
+    if (!body.category) body.category = "Tamu Undangan";
+  }
+
   const columns = resources[resource].columns.filter((column) => column in body);
   if (!columns.length) return Response.json({ message: "No data" }, { status: 422 });
-  const values = columns.map((column) => body[column] === "" ? null : body[column]);
+  const values = columns.map((column) => (body[column] === "" ? null : body[column]));
   const placeholders = columns.map((_, index) => `$${index + 1}`).join(",");
-  const [row] = await query(`insert into ${resource} (${columns.join(",")},created_at,updated_at) values (${placeholders},now(),now()) returning *`, values);
+  const [row] = await query(
+    `insert into ${resource} (${columns.join(",")},created_at,updated_at) values (${placeholders},now(),now()) returning *`,
+    values,
+  );
   return Response.json(row, { status: 201 });
 }
