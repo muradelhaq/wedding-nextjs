@@ -22,7 +22,10 @@ function shell(content: string, script = "") {
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#0f172a">
   <title>Admin Dashboard &mdash; The Wedding of Ramazan &amp; Dede</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,13 +63,22 @@ function shell(content: string, script = "") {
       --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
       --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
     body {
       font-family: var(--font-sans);
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
+      touch-action: manipulation;
+    }
+    body.drawer-open {
+      overflow: hidden;
     }
     a { color: inherit; text-decoration: none; }
     button, input, select, textarea { font-family: inherit; font-size: inherit; }
@@ -74,8 +86,27 @@ function shell(content: string, script = "") {
     /* LAYOUT */
     .app-layout {
       display: grid;
-      grid-template-columns: 270px 1fr;
+      grid-template-columns: 270px minmax(0, 1fr);
       min-height: 100vh;
+      min-height: 100dvh;
+      position: relative;
+    }
+
+    /* SIDEBAR BACKDROP */
+    .sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 45;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .sidebar-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     /* SIDEBAR */
@@ -88,53 +119,123 @@ function shell(content: string, script = "") {
       position: sticky;
       top: 0;
       height: 100vh;
+      height: 100dvh;
       overflow-y: auto;
       z-index: 40;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .sidebar-header {
-      padding: 24px 20px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      flex-shrink: 0;
+      background: var(--sidebar-bg);
+      padding: max(16px, env(safe-area-inset-top, 16px)) 16px 14px;
       border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
     .brand-wrap {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
     }
     .brand-icon {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: var(--radius-md);
       background: linear-gradient(135deg, #10b981, #047857);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: 20px;
+      font-size: 19px;
       box-shadow: 0 4px 10px rgba(16,185,129,0.3);
       flex-shrink: 0;
+    }
+    .brand-text {
+      min-width: 0;
+      overflow: hidden;
     }
     .brand-title {
       font-family: var(--font-serif);
       color: #fff;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       letter-spacing: -0.01em;
       line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .brand-badge {
       display: inline-block;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       color: #10b981;
       background: rgba(16,185,129,0.12);
-      padding: 2px 8px;
+      padding: 1px 7px;
       border-radius: 999px;
-      margin-top: 4px;
+      margin-top: 2px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+    .sidebar-close-btn {
+      display: none;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 20px;
+      line-height: 1;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+      z-index: 10;
+    }
+    .sidebar-close-btn:hover, .sidebar-close-btn:active {
+      background: #ef4444;
+      border-color: #ef4444;
+      color: #ffffff;
+    }
+    .sidebar-mobile-close-bar {
+      display: none;
+      padding: 12px 14px max(16px, env(safe-area-inset-bottom, 16px));
+      background: rgba(0, 0, 0, 0.25);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .sidebar-bottom-close-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      min-height: 40px;
+    }
+    .sidebar-bottom-close-btn:hover, .sidebar-bottom-close-btn:active {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
     .nav-section {
-      padding: 20px 14px 10px;
+      padding: 18px 14px 8px;
     }
     .nav-label {
       font-size: 11px;
@@ -166,6 +267,7 @@ function shell(content: string, script = "") {
       text-align: left;
       cursor: pointer;
       transition: all 0.15s ease;
+      min-height: 42px;
     }
     .nav-item a:hover, .nav-item button:hover {
       color: #f1f5f9;
@@ -194,7 +296,7 @@ function shell(content: string, script = "") {
     }
     .sidebar-footer {
       margin-top: auto;
-      padding: 16px 14px;
+      padding: 16px 14px max(16px, env(safe-area-inset-bottom, 16px));
       border-top: 1px solid rgba(255,255,255,0.06);
       display: flex;
       align-items: center;
@@ -239,12 +341,13 @@ function shell(content: string, script = "") {
       background: transparent;
       border: none;
       color: #ef4444;
-      padding: 7px 10px;
+      padding: 8px 10px;
       border-radius: var(--radius-sm);
       cursor: pointer;
       font-size: 12px;
       font-weight: 600;
       transition: all 0.15s;
+      min-height: 36px;
     }
     .btn-logout:hover {
       background: rgba(239, 68, 68, 0.15);
@@ -257,13 +360,15 @@ function shell(content: string, script = "") {
       min-width: 0;
     }
     .top-bar {
-      background: #ffffff;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
-      padding: 16px 32px;
+      padding: max(14px, env(safe-area-inset-top, 14px)) 32px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 14px;
       position: sticky;
       top: 0;
       z-index: 30;
@@ -271,24 +376,49 @@ function shell(content: string, script = "") {
     .top-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
+      min-width: 0;
+    }
+    .btn-sidebar-toggle {
+      display: none;
+      width: 38px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: #ffffff;
+      font-size: 18px;
+      color: var(--dark);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .btn-sidebar-toggle:active {
+      background: #f1f5f9;
     }
     .page-heading {
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 700;
       color: var(--dark);
       letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .top-actions {
       display: flex;
       align-items: center;
       gap: 10px;
-      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+    .btn-label-mobile {
+      display: none;
     }
 
     /* CONTENT BODY */
     .content-body {
-      padding: 28px 32px 48px;
+      padding: 24px 32px 48px;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -298,17 +428,18 @@ function shell(content: string, script = "") {
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
+      gap: 16px;
     }
     .stat-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 20px;
+      padding: 18px 20px;
       box-shadow: var(--shadow-sm);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       transition: transform 0.15s, box-shadow 0.15s;
     }
     .stat-card:hover {
@@ -318,34 +449,41 @@ function shell(content: string, script = "") {
     .stat-info {
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
     .stat-title {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.04em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .stat-value {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 800;
       color: var(--dark);
-      margin-top: 4px;
+      margin-top: 3px;
       line-height: 1.1;
     }
     .stat-sub {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
-      margin-top: 5px;
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .stat-icon {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 22px;
       flex-shrink: 0;
     }
     .stat-icon.green { background: #ecfdf5; color: #059669; }
@@ -362,21 +500,21 @@ function shell(content: string, script = "") {
       overflow: hidden;
     }
     .card-header {
-      padding: 18px 24px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 14px;
     }
     .card-title-wrap h2 {
-      font-size: 17px;
+      font-size: 16.5px;
       font-weight: 700;
       color: var(--dark);
     }
     .card-title-wrap p {
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-muted);
       margin-top: 2px;
     }
@@ -385,6 +523,9 @@ function shell(content: string, script = "") {
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
+    }
+    .filter-row {
+      display: contents;
     }
 
     /* SEARCH & FILTER */
@@ -397,15 +538,16 @@ function shell(content: string, script = "") {
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: #f8fafc;
-      width: 240px;
+      width: 220px;
       transition: all 0.15s;
+      min-height: 38px;
     }
     .search-input:focus {
       outline: none;
       background: #fff;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
-      width: 280px;
+      width: 260px;
     }
     .search-icon {
       position: absolute;
@@ -423,6 +565,8 @@ function shell(content: string, script = "") {
       border-radius: var(--radius-sm);
       background: #f8fafc;
       cursor: pointer;
+      min-height: 38px;
+      color: var(--text);
     }
     .filter-select:focus {
       outline: none;
@@ -436,13 +580,17 @@ function shell(content: string, script = "") {
       justify-content: center;
       gap: 8px;
       padding: 8px 14px;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       border-radius: var(--radius-sm);
       border: 1px solid transparent;
       cursor: pointer;
       transition: all 0.15s ease;
       white-space: nowrap;
+      min-height: 38px;
+    }
+    .btn:active {
+      transform: scale(0.98);
     }
     .btn-primary {
       background: var(--primary);
@@ -485,19 +633,23 @@ function shell(content: string, script = "") {
       background: var(--danger-hover);
     }
     .btn-sm {
-      padding: 5px 9px;
+      padding: 5px 10px;
       font-size: 12px;
       border-radius: 6px;
+      min-height: 32px;
     }
     .btn-icon {
-      padding: 6px 8px;
+      padding: 6px 10px;
       font-size: 13px;
+      min-height: 32px;
     }
 
-    /* TABLE */
-    .table-container {
+    /* DESKTOP TABLE VIEW */
+    .desktop-table-view {
+      display: block;
       width: 100%;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
     table {
       width: 100%;
@@ -506,17 +658,17 @@ function shell(content: string, script = "") {
     }
     th {
       background: #f8fafc;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: #64748b;
-      padding: 12px 18px;
+      padding: 12px 16px;
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
     td {
-      padding: 14px 18px;
+      padding: 12px 16px;
       border-bottom: 1px solid var(--border);
       font-size: 13.5px;
       vertical-align: middle;
@@ -541,6 +693,7 @@ function shell(content: string, script = "") {
       font-size: 11.5px;
       font-weight: 600;
       line-height: 1.2;
+      white-space: nowrap;
     }
     .badge-emerald { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
     .badge-blue { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
@@ -557,12 +710,152 @@ function shell(content: string, script = "") {
       flex-wrap: nowrap;
     }
 
+    /* MOBILE CARD VIEW (Active on <= 768px) */
+    .mobile-card-view {
+      display: none;
+    }
+    .guest-card, .generic-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .gc-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .gc-name-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .gc-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.3;
+      word-break: break-word;
+    }
+    .gc-num {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .gc-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+    .gc-link-box {
+      display: flex;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      gap: 8px;
+    }
+    .gc-link-text {
+      font-family: monospace;
+      font-size: 12.5px;
+      color: #475569;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .gc-phone {
+      font-size: 12.5px;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .gc-phone a {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .gc-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+    .gc-btn-share {
+      flex: 1;
+      min-height: 38px;
+    }
+
+    /* GENERIC CARD STYLES */
+    .generic-card-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 13px;
+      padding: 4px 0;
+      border-bottom: 1px dashed #f1f5f9;
+    }
+    .generic-card-row:last-of-type {
+      border-bottom: none;
+    }
+    .generic-card-label {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: capitalize;
+      flex-shrink: 0;
+    }
+    .generic-card-val {
+      color: var(--dark);
+      font-weight: 500;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    /* MOBILE FLOATING ACTION BUTTON (FAB) */
+    .mobile-fab {
+      display: none;
+      position: fixed;
+      bottom: max(20px, env(safe-area-inset-bottom, 20px));
+      right: 20px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #047857);
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: 400;
+      border: none;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
+      cursor: pointer;
+      z-index: 35;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .mobile-fab:active {
+      transform: scale(0.92);
+    }
+
     /* MODAL */
     .modal-backdrop {
       position: fixed;
       inset: 0;
       background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       display: none;
       place-items: center;
       padding: 20px;
@@ -579,6 +872,7 @@ function shell(content: string, script = "") {
       border-radius: var(--radius-lg);
       width: min(600px, 95vw);
       max-height: 90vh;
+      max-height: 90dvh;
       overflow-y: auto;
       box-shadow: var(--shadow-xl);
       animation: modalIn 0.2s ease forwards;
@@ -586,44 +880,53 @@ function shell(content: string, script = "") {
     .modal-box.lg {
       width: min(780px, 95vw);
     }
+    .sheet-handle {
+      display: none;
+    }
     @keyframes modalIn {
       from { transform: scale(0.96) translateY(8px); opacity: 0; }
       to { transform: scale(1) translateY(0); opacity: 1; }
     }
     .modal-header {
-      padding: 20px 24px;
+      padding: 18px 22px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
     }
     .modal-title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--dark);
     }
     .modal-close {
       background: transparent;
       border: none;
-      font-size: 22px;
+      font-size: 24px;
       color: #94a3b8;
       cursor: pointer;
       padding: 4px;
       line-height: 1;
       border-radius: 4px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .modal-close:hover {
       color: var(--dark);
       background: #f1f5f9;
     }
     .modal-body {
-      padding: 24px;
+      padding: 20px 22px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
     .modal-footer {
-      padding: 16px 24px;
+      padding: 14px 22px;
       border-top: 1px solid var(--border);
       background: #f8fafc;
       display: flex;
@@ -632,6 +935,14 @@ function shell(content: string, script = "") {
       gap: 10px;
       border-bottom-left-radius: var(--radius-lg);
       border-bottom-right-radius: var(--radius-lg);
+    }
+    .modal-footer-split {
+      justify-content: space-between;
+    }
+    .modal-footer-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     /* FORM ELEMENTS */
@@ -648,6 +959,7 @@ function shell(content: string, script = "") {
     .form-hint {
       font-size: 12px;
       color: #64748b;
+      line-height: 1.4;
     }
     .form-input, .form-select, .form-textarea {
       width: 100%;
@@ -668,6 +980,7 @@ function shell(content: string, script = "") {
       resize: vertical;
       min-height: 100px;
       font-family: inherit;
+      line-height: 1.5;
     }
 
     /* TOAST */
@@ -705,35 +1018,46 @@ function shell(content: string, script = "") {
       display: flex;
       gap: 6px;
       border-bottom: 1px solid var(--border);
-      padding: 0 4px;
-      margin-bottom: 12px;
+      padding: 0 4px 6px;
+      margin-bottom: 10px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar {
+      display: none;
     }
     .tab-btn {
-      padding: 8px 14px;
-      border: none;
-      background: transparent;
-      font-size: 13px;
+      padding: 7px 12px;
+      border: 1px solid transparent;
+      background: #f1f5f9;
+      font-size: 12.5px;
       font-weight: 600;
       color: #64748b;
       cursor: pointer;
-      border-bottom: 2px solid transparent;
+      border-radius: 999px;
       transition: all 0.15s;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
     .tab-btn:hover {
       color: var(--dark);
+      background: #e2e8f0;
     }
     .tab-btn.active {
       color: var(--primary);
-      border-bottom-color: var(--primary);
+      background: var(--primary-light);
+      border-color: var(--primary-border);
     }
 
     /* LOGIN PAGE */
     .login-container {
       min-height: 100vh;
+      min-height: 100dvh;
       display: grid;
       place-items: center;
       background: radial-gradient(circle at 10% 20%, #ecfdf5 0%, #f8fafc 90%);
-      padding: 24px;
+      padding: 20px;
     }
     .login-card {
       width: min(440px, 100%);
@@ -741,32 +1065,32 @@ function shell(content: string, script = "") {
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-xl);
-      padding: 40px 32px;
+      padding: 36px 28px;
       text-align: center;
     }
     .login-logo {
-      width: 56px;
-      height: 56px;
-      margin: 0 auto 16px;
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 14px;
       background: linear-gradient(135deg, #10b981, #047857);
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: 28px;
+      font-size: 26px;
       box-shadow: 0 6px 16px rgba(16,185,129,0.3);
     }
     .login-card h1 {
       font-family: var(--font-serif);
-      font-size: 24px;
+      font-size: 22px;
       color: var(--dark);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .login-card p {
-      font-size: 13.5px;
+      font-size: 13px;
       color: var(--text-muted);
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
     .login-form {
       display: flex;
@@ -805,42 +1129,233 @@ function shell(content: string, script = "") {
       font-family: monospace;
     }
 
-    /* RESPONSIVE */
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 1200px) {
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .top-bar { flex-wrap: wrap; }
+    }
     @media (max-width: 900px) {
       .app-layout {
         grid-template-columns: 1fr;
       }
+      .btn-sidebar-toggle {
+        display: inline-flex !important;
+      }
+      .sidebar-close-btn {
+        display: inline-flex !important;
+      }
+      .sidebar-mobile-close-bar {
+        display: block !important;
+      }
       .sidebar {
         position: fixed;
-        left: -280px;
-        transition: left 0.25s ease;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: min(300px, 85vw);
+        height: 100vh;
+        height: 100dvh;
+        transform: translateX(-100%);
+        visibility: hidden;
+        z-index: 50;
+        box-shadow: var(--shadow-xl);
       }
       .sidebar.open {
-        left: 0;
+        transform: translateX(0);
+        visibility: visible;
       }
       .stats-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
       }
       .top-bar {
-        padding: 14px 18px;
+        padding: max(12px, env(safe-area-inset-top, 12px)) 16px 12px;
       }
       .content-body {
-        padding: 18px;
+        padding: 16px;
       }
     }
-    @media (max-width: 550px) {
-      .stats-grid {
-        grid-template-columns: 1fr;
+
+    @media (max-width: 768px) {
+      .desktop-table-view {
+        display: none;
+      }
+      .mobile-card-view {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 14px;
+      }
+      .mobile-fab {
+        display: flex;
       }
       .card-header {
         flex-direction: column;
         align-items: stretch;
+        gap: 12px;
+        padding: 14px;
+      }
+      .card-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .search-input-wrap {
+        width: 100%;
       }
       .search-input {
+        width: 100% !important;
+        min-width: 100%;
+      }
+      .filter-row {
+        display: flex;
+        gap: 8px;
         width: 100%;
       }
-      .search-input:focus {
+      .filter-select {
+        flex: 1;
+        min-width: 0;
+      }
+      .filter-row .btn {
+        flex-shrink: 0;
+      }
+      input, select, textarea {
+        font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
+      }
+      .content-body {
+        padding: 14px 14px 88px;
+        gap: 16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .btn-label-desktop {
+        display: none;
+      }
+      .btn-label-mobile {
+        display: inline;
+      }
+      .top-actions .btn {
+        padding: 7px 10px;
+        font-size: 12px;
+        min-height: 34px;
+      }
+      .top-bar { flex-wrap: wrap; }
+      .top-actions { flex-wrap: wrap; }
+      .gc-top { flex-wrap: wrap; }
+      .gc-top .badge { white-space: normal; overflow-wrap: anywhere; }
+      .gc-btn-share { flex-basis: 100%; }
+      .generic-card-row { flex-wrap: wrap; }
+      .generic-card-val { min-width: 0; overflow-wrap: anywhere; }
+      .stat-card { gap: 6px; min-width: 0; }
+      .stat-icon { flex-shrink: 0; }
+      .sidebar-close-btn, .btn-sidebar-toggle { width: 44px; height: 44px; }
+      .page-heading {
+        font-size: 16px;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .stat-card {
+        padding: 12px 12px;
+      }
+      .stat-title {
+        font-size: 11px;
+      }
+      .stat-value {
+        font-size: 21px;
+      }
+      .stat-sub {
+        font-size: 10.5px;
+      }
+      .stat-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 19px;
+      }
+
+      /* BOTTOM SHEET MODALS ON MOBILE */
+      .modal-backdrop {
+        align-items: flex-end;
+        padding: 0;
+      }
+      .modal-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 88vh !important;
+        max-height: 88dvh !important;
+        border-radius: 20px 20px 0 0 !important;
+        animation: sheetUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+      }
+      @keyframes sheetUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+      }
+      .sheet-handle {
+        display: block;
+        width: 38px;
+        height: 4px;
+        background: #cbd5e1;
+        border-radius: 999px;
+        margin: 10px auto 2px;
+        flex-shrink: 0;
+      }
+      .modal-header {
+        padding: 12px 18px 14px;
+      }
+      .modal-body {
+        padding: 16px 18px;
+        gap: 14px;
+      }
+      .modal-footer {
+        padding: 12px 18px max(14px, env(safe-area-inset-bottom, 14px));
+        flex-direction: column-reverse;
+        gap: 8px;
+        border-radius: 0;
+      }
+      .modal-footer .btn {
         width: 100%;
+        min-height: 42px;
+      }
+      .modal-footer-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .modal-footer-actions .btn {
+        width: 100%;
+        min-height: 42px;
+      }
+      .copy-box {
+        flex-wrap: wrap;
+      }
+      .copy-box input {
+        min-width: 100%;
+        padding: 4px 0;
+        margin-bottom: 4px;
+      }
+      .copy-box .btn {
+        flex: 1;
+      }
+      .toast {
+        left: 16px;
+        right: 16px;
+        bottom: max(84px, calc(84px + env(safe-area-inset-bottom, 0px)));
+        justify-content: center;
+        text-align: center;
+        font-size: 13px;
+        padding: 10px 14px;
+      }
+      .login-container {
+        padding: 16px;
+      }
+      .login-card {
+        padding: 28px 18px;
+      }
+      .login-card h1 {
+        font-size: 20px;
       }
     }
   </style>
@@ -870,7 +1385,7 @@ function loginPage(error = "") {
             <label class="form-label" for="password">Kata Sandi</label>
             <input class="form-input" type="password" id="password" name="password" placeholder="••••••••" required>
           </div>
-          <button class="btn btn-primary" type="submit" style="padding:12px; margin-top:8px; font-size:14.5px">
+          <button class="btn btn-primary" type="submit" style="padding:12px; margin-top:6px; font-size:15px; min-height:44px;">
             Masuk ke Dashboard
           </button>
         </form>
@@ -916,16 +1431,22 @@ export async function GET(request: Request) {
 
   const html = `
     <div class="app-layout">
+      <!-- SIDEBAR BACKDROP FOR MOBILE -->
+      <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
       <!-- SIDEBAR -->
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
           <div class="brand-wrap">
             <div class="brand-icon">💍</div>
-            <div>
+            <div class="brand-text">
               <div class="brand-title">Ramazan &amp; Dede</div>
               <span class="brand-badge">Wedding Admin</span>
             </div>
           </div>
+          <button type="button" class="sidebar-close-btn" id="btn-sidebar-close" aria-label="Tutup Menu" title="Tutup Navigasi">
+            <span style="display:inline-block; font-size:18px; font-weight:800; line-height:1;">✕</span>
+          </button>
         </div>
 
         <div class="nav-section">
@@ -1011,6 +1532,12 @@ export async function GET(request: Request) {
           </div>
           <button class="btn-logout" id="logout">Keluar</button>
         </div>
+
+        <div class="sidebar-mobile-close-bar">
+          <button type="button" class="sidebar-bottom-close-btn" id="btn-sidebar-bottom-close">
+            <span>✕</span> Tutup Navigasi
+          </button>
+        </div>
       </aside>
 
       <!-- MAIN CONTENT -->
@@ -1018,17 +1545,17 @@ export async function GET(request: Request) {
         <!-- TOP BAR -->
         <header class="top-bar">
           <div class="top-left">
-            <button class="btn btn-outline btn-sm" id="btn-sidebar-toggle" style="display:none">☰</button>
+            <button type="button" class="btn-sidebar-toggle" id="btn-sidebar-toggle" aria-label="Buka Menu" aria-controls="sidebar" aria-expanded="false">☰</button>
             <div>
               <h1 class="page-heading" id="page-title">Daftar Tamu Undangan</h1>
             </div>
           </div>
           <div class="top-actions">
             <button class="btn btn-gold" id="btn-header-bulk">
-              <span>⚡</span> Bulk Generate
+              <span>⚡</span> <span class="btn-label-desktop">Bulk Generate</span><span class="btn-label-mobile">Massal</span>
             </button>
             <button class="btn btn-primary" id="btn-header-add">
-              <span>+</span> Tambah Tamu Khusus
+              <span>+</span> <span class="btn-label-desktop">Tambah Tamu Khusus</span><span class="btn-label-mobile">Tamu</span>
             </button>
           </div>
         </header>
@@ -1071,7 +1598,7 @@ export async function GET(request: Request) {
             </div>
           </div>
 
-          <!-- MAIN TABLE CARD -->
+          <!-- MAIN TABLE / CARDS CARD -->
           <section class="card">
             <div class="card-header">
               <div class="card-title-wrap">
@@ -1083,18 +1610,20 @@ export async function GET(request: Request) {
                   <span class="search-icon">🔍</span>
                   <input type="text" class="search-input" id="search-input" placeholder="Cari nama, kategori, nomor...">
                 </div>
-                <select class="filter-select" id="category-filter">
-                  <option value="">Semua Kategori</option>
-                  <option value="VIP">VIP</option>
-                  <option value="Tamu Khusus">Tamu Khusus</option>
-                  <option value="Keluarga">Keluarga</option>
-                  <option value="Sahabat">Sahabat</option>
-                  <option value="Rekan Kerja">Rekan Kerja</option>
-                  <option value="Umum">Umum</option>
-                </select>
-                <a href="/admin/links" class="btn btn-outline" title="Export file TSV/Excel">
-                  <span>📥</span> Unduh TSV
-                </a>
+                <div class="filter-row">
+                  <select class="filter-select" id="category-filter">
+                    <option value="">Semua Kategori</option>
+                    <option value="VIP">VIP</option>
+                    <option value="Tamu Khusus">Tamu Khusus</option>
+                    <option value="Keluarga">Keluarga</option>
+                    <option value="Sahabat">Sahabat</option>
+                    <option value="Rekan Kerja">Rekan Kerja</option>
+                    <option value="Umum">Umum</option>
+                  </select>
+                  <a href="/admin/links" class="btn btn-outline" title="Export file TSV/Excel">
+                    <span>📥</span> Unduh TSV
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -1104,14 +1633,20 @@ export async function GET(request: Request) {
           </section>
         </main>
       </div>
+
+      <!-- MOBILE FLOATING ACTION BUTTON (FAB) -->
+      <button type="button" class="mobile-fab" id="mobile-fab" title="Tambah Tamu Khusus" aria-label="Tambah Tamu Khusus">
+        <span>+</span>
+      </button>
     </div>
 
     <!-- MODAL: TAMBAH / EDIT GUEST -->
     <div class="modal-backdrop" id="modal-guest">
       <div class="modal-box">
+        <div class="sheet-handle"></div>
         <div class="modal-header">
           <h3 class="modal-title" id="modal-guest-title">Tambah Tamu Khusus</h3>
-          <button class="modal-close" data-close="modal-guest">&times;</button>
+          <button type="button" class="modal-close" data-close="modal-guest">&times;</button>
         </div>
         <form id="form-guest">
           <input type="hidden" id="guest-id">
@@ -1169,12 +1704,13 @@ export async function GET(request: Request) {
     <!-- MODAL: BAGIKAN LINK & WHATSAPP GENERATOR -->
     <div class="modal-backdrop" id="modal-share">
       <div class="modal-box lg">
+        <div class="sheet-handle"></div>
         <div class="modal-header">
           <div>
             <h3 class="modal-title">✨ Bagikan Undangan Khusus</h3>
             <p style="font-size:13px; color:#64748b; margin-top:2px" id="share-modal-subtitle">Tamu: -</p>
           </div>
-          <button class="modal-close" data-close="modal-share">&times;</button>
+          <button type="button" class="modal-close" data-close="modal-share">&times;</button>
         </div>
         <div class="modal-body">
           <!-- LINK UTAMA -->
@@ -1198,7 +1734,7 @@ export async function GET(request: Request) {
           </div>
 
           <!-- PILIHAN TEMPLATE PESAN WA -->
-          <div class="form-group" style="margin-top:10px">
+          <div class="form-group" style="margin-top:4px">
             <label class="form-label">Pilih Gaya Pesan WhatsApp</label>
             <div class="nav-tabs" id="wa-template-tabs">
               <button type="button" class="tab-btn active" data-template="formal">🕌 Islami &amp; Formal</button>
@@ -1210,9 +1746,9 @@ export async function GET(request: Request) {
             <textarea class="form-textarea" id="share-wa-text" rows="9"></textarea>
           </div>
         </div>
-        <div class="modal-footer" style="justify-content:space-between">
+        <div class="modal-footer modal-footer-split">
           <button type="button" class="btn btn-secondary" data-close="modal-share">Tutup</button>
-          <div style="display:flex; gap:10px">
+          <div class="modal-footer-actions">
             <button type="button" class="btn btn-primary" id="btn-copy-wa-text">📋 Salin Pesan WA</button>
             <button type="button" class="btn btn-gold" id="btn-send-wa">💬 Kirim ke WhatsApp</button>
           </div>
@@ -1223,12 +1759,13 @@ export async function GET(request: Request) {
     <!-- MODAL: BULK GENERATE GUEST -->
     <div class="modal-backdrop" id="modal-bulk">
       <div class="modal-box lg">
+        <div class="sheet-handle"></div>
         <div class="modal-header">
           <div>
             <h3 class="modal-title">⚡ Bulk Generate Undangan (Massal)</h3>
             <p style="font-size:13px; color:#64748b; margin-top:2px">Generate puluhan atau ratusan link tamu sekaligus dalam hitungan detik.</p>
           </div>
-          <button class="modal-close" data-close="modal-bulk">&times;</button>
+          <button type="button" class="modal-close" data-close="modal-bulk">&times;</button>
         </div>
         <form id="form-bulk">
           <div class="modal-body">
@@ -1258,9 +1795,10 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
     <!-- MODAL: GENERIC RESOURCE FORM (RSVP, Guestbook, Stories, etc) -->
     <div class="modal-backdrop" id="modal-generic">
       <div class="modal-box">
+        <div class="sheet-handle"></div>
         <div class="modal-header">
           <h3 class="modal-title" id="modal-generic-title">Form Data</h3>
-          <button class="modal-close" data-close="modal-generic">&times;</button>
+          <button type="button" class="modal-close" data-close="modal-generic">&times;</button>
         </div>
         <form id="form-generic">
           <input type="hidden" id="generic-id">
@@ -1325,24 +1863,25 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
         .replaceAll("'", '&#039;');
     }
 
-    // Render Table
+    // Render Table / Cards
     function renderTable() {
       if (currentResource === 'guests') {
-        categoryFilter.style.display = 'inline-block';
+        if (categoryFilter) categoryFilter.style.display = '';
         renderGuestsTable(filteredRows);
       } else {
-        categoryFilter.style.display = 'none';
+        if (categoryFilter) categoryFilter.style.display = 'none';
         renderGenericTable(filteredRows);
       }
     }
 
     function renderGuestsTable(data) {
       if (!data.length) {
-        tableContainer.innerHTML = '<div style="padding:48px; text-align:center; color:#64748b;"><p style="font-size:16px; font-weight:600;">Belum ada tamu ditemukan.</p><p style="font-size:13px; margin-top:4px;">Silakan klik "+ Tambah Tamu Khusus" atau "⚡ Bulk Generate" untuk mulai membuat tautan undangan.</p></div>';
+        tableContainer.innerHTML = '<div style="padding:48px 20px; text-align:center; color:#64748b;"><p style="font-size:16px; font-weight:600;">Belum ada tamu ditemukan.</p><p style="font-size:13px; margin-top:4px;">Silakan klik "+ Tambah Tamu Khusus" atau "⚡ Bulk Generate" untuk mulai membuat tautan undangan.</p></div>';
         return;
       }
 
-      let html = '<table><thead><tr>';
+      // 1. Desktop Table View
+      let html = '<div class="desktop-table-view"><table><thead><tr>';
       html += '<th style="width:50px">No</th>';
       html += '<th>Nama Tamu</th>';
       html += '<th>Kategori</th>';
@@ -1355,8 +1894,8 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
 
       data.forEach((r, idx) => {
         const guestLink = origin + '/' + (r.slug || '');
-        const openedBadge = r.is_opened 
-          ? '<span class="badge badge-emerald">Dibuka (' + (r.view_count || 1) + 'x)</span>' 
+        const openedBadge = r.is_opened
+          ? '<span class="badge badge-emerald">Dibuka (' + (r.view_count || 1) + 'x)</span>'
           : '<span class="badge badge-gray">Belum Dibuka</span>';
 
         let rsvpBadge = '<span class="badge badge-gray">-</span>';
@@ -1381,7 +1920,7 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
         html += '<td>';
         html += '<div style="display:flex; align-items:center; gap:6px">';
         html += '<span style="font-family:monospace; font-size:12px; color:#475569; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">/' + esc(r.slug) + '</span>';
-        html += '<button class="btn btn-outline btn-sm btn-icon" title="Salin Link" onclick="copyGuestLink(\\'' + guestLink + '\\')">📋</button>';
+        html += '<button type="button" class="btn btn-outline btn-sm btn-icon" title="Salin Link" onclick="copyGuestLink(\\'' + guestLink + '\\')">📋</button>';
         html += '<a href="' + guestLink + '" target="_blank" class="btn btn-outline btn-sm btn-icon" title="Buka Undangan">↗</a>';
         html += '</div>';
         html += '</td>';
@@ -1390,26 +1929,91 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
         html += '<td style="font-size:13px; color:#475569">' + (r.phone ? esc(r.phone) : '-') + '</td>';
         html += '<td style="text-align:right">';
         html += '<div class="actions-cell" style="justify-content:flex-end">';
-        html += '<button class="btn btn-gold btn-sm" onclick="openShareModal(' + r.id + ')"><span>✨</span> Share</button>';
-        html += '<button class="btn btn-outline btn-sm" onclick="editGuest(' + r.id + ')">Edit</button>';
-        html += '<button class="btn btn-outline btn-sm" style="color:#ef4444" onclick="deleteRow(' + r.id + ')">Hapus</button>';
+        html += '<button type="button" class="btn btn-gold btn-sm" onclick="openShareModal(' + r.id + ')"><span>✨</span> Share</button>';
+        html += '<button type="button" class="btn btn-outline btn-sm" onclick="editGuest(' + r.id + ')">Edit</button>';
+        html += '<button type="button" class="btn btn-outline btn-sm" style="color:#ef4444" onclick="deleteRow(' + r.id + ')">Hapus</button>';
         html += '</div>';
         html += '</td>';
         html += '</tr>';
       });
 
-      html += '</tbody></table>';
+      html += '</tbody></table></div>';
+
+      // 2. Mobile Cards View (Smooth, Touch-Friendly Mobile Experience)
+      html += '<div class="mobile-card-view">';
+      data.forEach((r, idx) => {
+        const guestLink = origin + '/' + (r.slug || '');
+        const openedBadge = r.is_opened
+          ? '<span class="badge badge-emerald">Dibuka (' + (r.view_count || 1) + 'x)</span>'
+          : '<span class="badge badge-gray">Belum Dibuka</span>';
+
+        let rsvpBadge = '<span class="badge badge-gray">RSVP: -</span>';
+        if (r.attendance === 'hadir') {
+          rsvpBadge = '<span class="badge badge-emerald">RSVP: Hadir (' + (r.total_guest || 1) + ' org)</span>';
+        } else if (r.attendance === 'tidak_hadir') {
+          rsvpBadge = '<span class="badge badge-rose">RSVP: Tidak Hadir</span>';
+        } else if (r.attendance === 'ragu') {
+          rsvpBadge = '<span class="badge badge-amber">RSVP: Ragu-ragu</span>';
+        }
+
+        const cat = r.category || 'Tamu Undangan';
+        let catBadgeClass = 'badge-blue';
+        if (cat.includes('VIP')) catBadgeClass = 'badge-purple';
+        else if (cat.includes('Khusus')) catBadgeClass = 'badge-amber';
+        else if (cat.includes('Keluarga')) catBadgeClass = 'badge-emerald';
+
+        const rawPhone = r.phone ? String(r.phone).trim() : '';
+        let cleanPhone = rawPhone.replace(/\\D/g, '');
+        if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.substring(1);
+
+        html += '<div class="guest-card">';
+        html += '  <div class="gc-top">';
+        html += '    <div class="gc-name-wrap">';
+        html += '      <span class="gc-name">' + esc(r.name) + '</span>';
+        html += '      <span class="gc-num">#' + (idx + 1) + '</span>';
+        html += '    </div>';
+        html += '    <span class="badge ' + catBadgeClass + '">' + esc(cat) + '</span>';
+        html += '  </div>';
+
+        html += '  <div class="gc-badges">';
+        html += '    ' + openedBadge;
+        html += '    ' + rsvpBadge;
+        html += '  </div>';
+
+        html += '  <div class="gc-link-box">';
+        html += '    <span class="gc-link-text">/' + esc(r.slug) + '</span>';
+        html += '    <button type="button" class="btn btn-outline btn-sm btn-icon" title="Salin Link" onclick="copyGuestLink(\\'' + guestLink + '\\')">📋 Salin</button>';
+        html += '    <a href="' + guestLink + '" target="_blank" class="btn btn-outline btn-sm btn-icon" title="Buka Undangan">↗ Buka</a>';
+        html += '  </div>';
+
+        if (rawPhone) {
+          html += '  <div class="gc-phone">';
+          html += '    <span>📱 WhatsApp:</span>';
+          html += '    <a href="https://wa.me/' + cleanPhone + '" target="_blank" rel="noopener">' + esc(rawPhone) + ' ↗</a>';
+          html += '  </div>';
+        }
+
+        html += '  <div class="gc-actions">';
+        html += '    <button type="button" class="btn btn-gold btn-sm gc-btn-share" onclick="openShareModal(' + r.id + ')"><span>✨</span> Bagikan Undangan</button>';
+        html += '    <button type="button" class="btn btn-outline btn-sm" onclick="editGuest(' + r.id + ')">Edit</button>';
+        html += '    <button type="button" class="btn btn-outline btn-sm" style="color:#ef4444" onclick="deleteRow(' + r.id + ')">Hapus</button>';
+        html += '  </div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
       tableContainer.innerHTML = html;
     }
 
     function renderGenericTable(data) {
       const s = schemas[currentResource];
       if (!data.length) {
-        tableContainer.innerHTML = '<div style="padding:48px; text-align:center; color:#64748b;"><p style="font-size:16px; font-weight:600;">Tidak ada data ditemukan.</p></div>';
+        tableContainer.innerHTML = '<div style="padding:48px 20px; text-align:center; color:#64748b;"><p style="font-size:16px; font-weight:600;">Tidak ada data ditemukan.</p></div>';
         return;
       }
 
-      let html = '<table><thead><tr><th>ID</th>';
+      // 1. Desktop view
+      let html = '<div class="desktop-table-view"><table><thead><tr><th>ID</th>';
       s.columns.forEach(c => {
         html += '<th>' + c.replaceAll('_', ' ') + '</th>';
       });
@@ -1424,20 +2028,44 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
         });
         html += '<td style="text-align:right">';
         html += '<div class="actions-cell" style="justify-content:flex-end">';
-        html += '<button class="btn btn-outline btn-sm" onclick="editGenericRow(' + r.id + ')">Edit</button>';
-        html += '<button class="btn btn-outline btn-sm" style="color:#ef4444" onclick="deleteRow(' + r.id + ')">Hapus</button>';
+        html += '<button type="button" class="btn btn-outline btn-sm" onclick="editGenericRow(' + r.id + ')">Edit</button>';
+        html += '<button type="button" class="btn btn-outline btn-sm" style="color:#ef4444" onclick="deleteRow(' + r.id + ')">Hapus</button>';
         html += '</div>';
         html += '</td></tr>';
       });
 
-      html += '</tbody></table>';
+      html += '</tbody></table></div>';
+
+      // 2. Mobile view
+      html += '<div class="mobile-card-view">';
+      data.forEach(r => {
+        html += '<div class="generic-card">';
+        html += '  <div class="gc-top">';
+        html += '    <span style="font-weight:700; color:var(--dark); font-size:14.5px;">#' + r.id + '</span>';
+        html += '  </div>';
+        s.columns.forEach(c => {
+          let val = r[c] ?? '';
+          if (typeof val === 'boolean') val = val ? 'Ya' : 'Tidak';
+          html += '  <div class="generic-card-row">';
+          html += '    <span class="generic-card-label">' + c.replaceAll('_', ' ') + '</span>';
+          html += '    <span class="generic-card-val">' + esc(String(val)) + '</span>';
+          html += '  </div>';
+        });
+        html += '  <div class="gc-actions" style="margin-top:4px;">';
+        html += '    <button type="button" class="btn btn-outline btn-sm" style="flex:1" onclick="editGenericRow(' + r.id + ')">Edit</button>';
+        html += '    <button type="button" class="btn btn-outline btn-sm" style="color:#ef4444" onclick="deleteRow(' + r.id + ')">Hapus</button>';
+        html += '  </div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
       tableContainer.innerHTML = html;
     }
 
     // Filter Logic
     function applyFilter() {
       const q = searchInput.value.toLowerCase().trim();
-      const cat = categoryFilter.value;
+      const cat = categoryFilter ? categoryFilter.value : '';
 
       filteredRows = allRows.filter(r => {
         if (currentResource === 'guests' && cat && r.category !== cat) {
@@ -1449,8 +2077,8 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
       renderTable();
     }
 
-    searchInput.addEventListener('input', applyFilter);
-    categoryFilter.addEventListener('change', applyFilter);
+    if (searchInput) searchInput.addEventListener('input', applyFilter);
+    if (categoryFilter) categoryFilter.addEventListener('change', applyFilter);
 
     // Load Resource
     async function loadResource(name) {
@@ -1490,15 +2118,30 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
     // MODAL HANDLERS
     function openModal(id) {
       const modal = document.getElementById(id);
-      if (modal) modal.classList.add('active');
+      if (modal) {
+        modal.classList.add('active');
+        syncScrollLock();
+      }
     }
     function closeModal(id) {
       const modal = document.getElementById(id);
-      if (modal) modal.classList.remove('active');
+      if (modal) {
+        modal.classList.remove('active');
+        syncScrollLock();
+      }
     }
 
     document.querySelectorAll('[data-close]').forEach(btn => {
       btn.onclick = () => closeModal(btn.dataset.close);
+    });
+
+    // Close modal when tapping backdrop directly
+    document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+      backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) {
+          closeModal(backdrop.id);
+        }
+      });
     });
 
     // Auto slug saat nama tamu diketik
@@ -1506,14 +2149,16 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
     const guestSlugInput = document.getElementById('guest-slug');
     let isSlugManuallyEdited = false;
 
-    guestNameInput.addEventListener('input', () => {
-      if (!isSlugManuallyEdited) {
-        guestSlugInput.value = slugify(guestNameInput.value);
-      }
-    });
-    guestSlugInput.addEventListener('input', () => {
-      isSlugManuallyEdited = guestSlugInput.value.trim().length > 0;
-    });
+    if (guestNameInput && guestSlugInput) {
+      guestNameInput.addEventListener('input', () => {
+        if (!isSlugManuallyEdited) {
+          guestSlugInput.value = slugify(guestNameInput.value);
+        }
+      });
+      guestSlugInput.addEventListener('input', () => {
+        isSlugManuallyEdited = guestSlugInput.value.trim().length > 0;
+      });
+    }
 
     // OPEN TAMBAH GUEST MODAL
     function openAddGuestModal() {
@@ -1526,7 +2171,7 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
       document.getElementById('guest-address').value = '';
       isSlugManuallyEdited = false;
       openModal('modal-guest');
-      setTimeout(() => guestNameInput.focus(), 50);
+      setTimeout(() => guestNameInput.focus(), 60);
     }
 
     document.getElementById('btn-header-add').onclick = openAddGuestModal;
@@ -1879,15 +2524,109 @@ Ramazan & Dede\`
       }
     };
 
-    // SIDEBAR TOGGLE MOBILE
+    // SIDEBAR DRAWER & MOBILE INTERACTION
     const sidebarEl = document.getElementById('sidebar');
+    const backdropEl = document.getElementById('sidebar-backdrop');
     const toggleBtn = document.getElementById('btn-sidebar-toggle');
-    if (window.innerWidth <= 900) {
-      toggleBtn.style.display = 'inline-flex';
+    const closeSidebarBtn = document.getElementById('btn-sidebar-close');
+    const bottomCloseBtn = document.getElementById('btn-sidebar-bottom-close');
+    const mobileFab = document.getElementById('mobile-fab');
+    const mobileSidebar = window.matchMedia('(max-width: 900px)');
+
+    function syncScrollLock() {
+      document.body.classList.toggle('drawer-open',
+        Boolean(document.querySelector('.modal-backdrop.active')) ||
+        (mobileSidebar.matches && sidebarEl.classList.contains('open')));
     }
-    toggleBtn.onclick = () => {
-      sidebarEl.classList.toggle('open');
-    };
+
+    function openSidebar() {
+      if (!mobileSidebar.matches) return;
+      sidebarEl.classList.add('open');
+      backdropEl.classList.add('active');
+      if (toggleBtn) {
+        toggleBtn.textContent = '✕';
+        toggleBtn.setAttribute('aria-label', 'Tutup Menu');
+        toggleBtn.setAttribute('aria-expanded', 'true');
+      }
+      document.querySelector('.main-wrap').inert = true;
+      syncScrollLock();
+      closeSidebarBtn.focus();
+    }
+
+    function closeSidebar() {
+      const focusWasInside = sidebarEl.contains(document.activeElement);
+      sidebarEl.classList.remove('open');
+      backdropEl.classList.remove('active');
+      if (toggleBtn) {
+        toggleBtn.textContent = '☰';
+        toggleBtn.setAttribute('aria-label', 'Buka Menu');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+      }
+      document.querySelector('.main-wrap').inert = false;
+      syncScrollLock();
+      if (focusWasInside && mobileSidebar.matches) toggleBtn.focus();
+    }
+
+    function toggleSidebar() {
+      if (sidebarEl.classList.contains('open')) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
+    }
+
+    if (toggleBtn) toggleBtn.onclick = toggleSidebar;
+    if (closeSidebarBtn) closeSidebarBtn.onclick = closeSidebar;
+    if (bottomCloseBtn) bottomCloseBtn.onclick = closeSidebar;
+    if (backdropEl) backdropEl.onclick = closeSidebar;
+    mobileSidebar.addEventListener('change', closeSidebar);
+
+    // Auto-close drawer when clicking any navigation link on mobile
+    document.querySelectorAll('.sidebar .nav-item a, .sidebar .nav-item button').forEach(item => {
+      item.addEventListener('click', () => {
+        if (window.innerWidth <= 900) {
+          closeSidebar();
+        }
+      });
+    });
+
+    // Mobile FAB opens add guest modal
+    if (mobileFab) {
+      mobileFab.onclick = () => {
+        if (currentResource === 'guests') {
+          openAddGuestModal();
+        } else {
+          const s = schemas[currentResource];
+          if (s) {
+            document.getElementById('modal-generic-title').textContent = 'Tambah ' + s.label;
+            document.getElementById('generic-id').value = '';
+            let fieldsHtml = '';
+            s.columns.forEach(col => {
+              fieldsHtml += '<div class="form-group">';
+              fieldsHtml += '<label class="form-label">' + col.replaceAll('_', ' ') + '</label>';
+              if (col === 'is_approved' || col === 'is_featured') {
+                fieldsHtml += '<select class="form-select" name="' + col + '"><option value="true">Ya</option><option value="false">Tidak</option></select>';
+              } else if (col === 'message' || col === 'description' || col === 'notes') {
+                fieldsHtml += '<textarea class="form-textarea" name="' + col + '"></textarea>';
+              } else {
+                fieldsHtml += '<input class="form-input" type="text" name="' + col + '">';
+              }
+              fieldsHtml += '</div>';
+            });
+            document.getElementById('modal-generic-fields').innerHTML = fieldsHtml;
+            openModal('modal-generic');
+          }
+        }
+      };
+    }
+
+    // Keyboard navigation (ESC to close modals or sidebar)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeSidebar();
+        document.querySelectorAll('.modal-backdrop.active').forEach(m => closeModal(m.id));
+      }
+    });
 
     // Inisialisasi awal
     renderTable();
