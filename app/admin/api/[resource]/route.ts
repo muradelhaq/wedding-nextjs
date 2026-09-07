@@ -8,6 +8,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ reso
   if (!isAdminRequest(request)) return Response.json({ message: "Unauthenticated" }, { status: 401 });
   const { resource } = await params;
   if (!isAdminResource(resource)) return Response.json({ message: "Not found" }, { status: 404 });
+  if (resource === "rsvps") {
+    return Response.json(await query(
+      `select r.*, g.name as guest_name
+       from rsvps r
+       left join guests g on g.id = r.guest_id
+       order by r.id desc limit 500`,
+    ));
+  }
   return Response.json(await query(`select * from ${resource} order by id desc limit 500`));
 }
 

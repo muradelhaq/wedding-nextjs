@@ -1528,7 +1528,7 @@ export async function GET(request: Request) {
               </button>
             </li>
             <li class="nav-item">
-              <a href="/admin/links" target="_blank">
+              <a href="/admin/links" target="_blank" data-table-export>
                 <span class="nav-icon">📥</span>
                 <span>Unduh File TSV/Excel</span>
               </a>
@@ -1640,7 +1640,7 @@ export async function GET(request: Request) {
                     <option value="Rekan Kerja">Rekan Kerja</option>
                     <option value="Umum">Umum</option>
                   </select>
-                  <a href="/admin/links" class="btn btn-outline" title="Export file TSV/Excel">
+                  <a href="/admin/links" class="btn btn-outline" data-table-export title="Unduh seluruh data Tamu (semua halaman)">
                     <span>📥</span> Unduh TSV
                   </a>
                 </div>
@@ -2068,6 +2068,11 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
 
     function renderGenericTable(data) {
       const s = schemas[currentResource];
+      const displayColumns = currentResource === 'rsvps'
+        ? ['guest_name', ...s.columns]
+        : s.columns;
+      const columnLabel = c => c === 'guest_name' ? 'Nama Tamu' : c.replaceAll('_', ' ');
+      const displayValue = (r, c) => c === 'guest_name' ? (r[c] || 'Tamu tidak ditemukan') : (r[c] ?? '');
       if (!data.length) {
         tableContainer.innerHTML = '<div style="padding:48px 20px; text-align:center; color:#64748b;"><p style="font-size:16px; font-weight:600;">Tidak ada data ditemukan.</p></div>';
         return;
@@ -2075,15 +2080,15 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
 
       // 1. Desktop view
       let html = '<div class="desktop-table-view"><table><thead><tr><th>ID</th>';
-      s.columns.forEach(c => {
-        html += '<th>' + c.replaceAll('_', ' ') + '</th>';
+      displayColumns.forEach(c => {
+        html += '<th>' + columnLabel(c) + '</th>';
       });
       html += '<th style="text-align:right">Aksi</th></tr></thead><tbody>';
 
       data.forEach(r => {
         html += '<tr><td style="color:#94a3b8; font-size:12px">#' + r.id + '</td>';
-        s.columns.forEach(c => {
-          let val = r[c] ?? '';
+        displayColumns.forEach(c => {
+          let val = displayValue(r, c);
           if (typeof val === 'boolean') val = val ? 'Ya' : 'Tidak';
           html += '<td title="' + esc(String(val)) + '" style="max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + esc(String(val)) + '</td>';
         });
@@ -2104,11 +2109,11 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
         html += '  <div class="gc-top">';
         html += '    <span style="font-weight:700; color:var(--dark); font-size:14.5px;">#' + r.id + '</span>';
         html += '  </div>';
-        s.columns.forEach(c => {
-          let val = r[c] ?? '';
+        displayColumns.forEach(c => {
+          let val = displayValue(r, c);
           if (typeof val === 'boolean') val = val ? 'Ya' : 'Tidak';
           html += '  <div class="generic-card-row">';
-          html += '    <span class="generic-card-label">' + c.replaceAll('_', ' ') + '</span>';
+          html += '    <span class="generic-card-label">' + columnLabel(c) + '</span>';
           html += '    <span class="generic-card-val">' + esc(String(val)) + '</span>';
           html += '  </div>';
         });
@@ -2152,6 +2157,10 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
       }
       currentResource = name;
       const s = schemas[name];
+      document.querySelectorAll('[data-table-export]').forEach(link => {
+        link.href = '/admin/links?resource=' + encodeURIComponent(name);
+        link.title = 'Unduh seluruh data ' + s.label + ' (semua halaman)';
+      });
       pageTitle.textContent = s.label;
       tableCardTitle.textContent = name === 'guests' ? 'Daftar Tamu & Link Personalisasi' : 'Tabel ' + s.label;
       tableCardDesc.textContent = name === 'guests' ? 'Kelola nama tamu, kategori, tautan personal, dan status undangan.' : 'Kelola data ' + s.label.toLowerCase() + '.';
