@@ -645,6 +645,26 @@ function shell(content: string, script = "") {
     }
 
     /* DESKTOP TABLE VIEW */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .pagination-controls, .pagination-size {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pagination .btn { min-height: 44px; }
+    .pagination .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
     .desktop-table-view {
       display: block;
       width: 100%;
@@ -1630,6 +1650,21 @@ export async function GET(request: Request) {
             <div class="table-container">
               <div id="table-container"></div>
             </div>
+            <nav class="pagination" aria-label="Paginasi data admin">
+              <label class="pagination-size" for="page-size">Data per halaman
+                <select class="filter-select" id="page-size">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+              </label>
+              <span id="pagination-summary" role="status" aria-live="polite"></span>
+              <div class="pagination-controls">
+                <button type="button" class="btn btn-outline btn-sm" id="page-prev" aria-controls="table-container">Sebelumnya</button>
+                <span id="pagination-page"></span>
+                <button type="button" class="btn btn-outline btn-sm" id="page-next" aria-controls="table-container">Berikutnya</button>
+              </div>
+            </nav>
           </section>
         </main>
       </div>
@@ -1820,6 +1855,8 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
     let currentResource = 'guests';
     let allRows = ${initialJson};
     let filteredRows = [...allRows];
+    let currentPage = 1;
+    let pageSize = 10;
     let activeShareGuest = null;
     let activeWaTemplate = 'formal';
     const origin = window.location.origin;
@@ -1865,14 +1902,38 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
 
     // Render Table / Cards
     function renderTable() {
+      const total = filteredRows.length;
+      const pages = Math.max(1, Math.ceil(total / pageSize));
+      currentPage = Math.max(1, Math.min(currentPage, pages));
+      const offset = (currentPage - 1) * pageSize;
+      const pageRows = filteredRows.slice(offset, offset + pageSize);
       if (currentResource === 'guests') {
         if (categoryFilter) categoryFilter.style.display = '';
-        renderGuestsTable(filteredRows);
+        renderGuestsTable(pageRows);
       } else {
         if (categoryFilter) categoryFilter.style.display = 'none';
-        renderGenericTable(filteredRows);
+        renderGenericTable(pageRows);
       }
+      document.getElementById('pagination-summary').textContent = total
+        ? 'Menampilkan ' + (offset + 1) + '–' + Math.min(offset + pageSize, total) + ' dari ' + total + ' data dimuat'
+        : 'Tidak ada data';
+      document.getElementById('pagination-page').textContent = currentPage + ' / ' + pages;
+      document.getElementById('page-prev').disabled = currentPage === 1;
+      document.getElementById('page-next').disabled = currentPage === pages;
     }
+
+    function changePage(delta) {
+      currentPage += delta;
+      renderTable();
+      document.getElementById('table-card-title').scrollIntoView({ block: 'center' });
+    }
+    document.getElementById('page-prev').onclick = () => changePage(-1);
+    document.getElementById('page-next').onclick = () => changePage(1);
+    document.getElementById('page-size').onchange = event => {
+      pageSize = Number(event.target.value);
+      currentPage = 1;
+      renderTable();
+    };
 
     function renderGuestsTable(data) {
       if (!data.length) {
@@ -1914,7 +1975,7 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
         else if (cat.includes('Keluarga')) catBadgeClass = 'badge-emerald';
 
         html += '<tr>';
-        html += '<td style="color:#94a3b8; font-size:12px">' + (idx + 1) + '</td>';
+        html += '<td style="color:#94a3b8; font-size:12px">' + ((currentPage - 1) * pageSize + idx + 1) + '</td>';
         html += '<td style="font-weight:600; color:#0f172a">' + esc(r.name) + '</td>';
         html += '<td><span class="badge ' + catBadgeClass + '">' + esc(cat) + '</span></td>';
         html += '<td>';
@@ -1970,7 +2031,7 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
         html += '  <div class="gc-top">';
         html += '    <div class="gc-name-wrap">';
         html += '      <span class="gc-name">' + esc(r.name) + '</span>';
-        html += '      <span class="gc-num">#' + (idx + 1) + '</span>';
+        html += '      <span class="gc-num">#' + ((currentPage - 1) * pageSize + idx + 1) + '</span>';
         html += '    </div>';
         html += '    <span class="badge ' + catBadgeClass + '">' + esc(cat) + '</span>';
         html += '  </div>';
@@ -2063,7 +2124,8 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
     }
 
     // Filter Logic
-    function applyFilter() {
+    function applyFilter(resetPage = true) {
+      if (resetPage) currentPage = 1;
       const q = searchInput.value.toLowerCase().trim();
       const cat = categoryFilter ? categoryFilter.value : '';
 
@@ -2082,6 +2144,12 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
 
     // Load Resource
     async function loadResource(name) {
+      const resourceChanged = currentResource !== name;
+      if (resourceChanged) {
+        currentPage = 1;
+        searchInput.value = '';
+        categoryFilter.value = '';
+      }
       currentResource = name;
       const s = schemas[name];
       pageTitle.textContent = s.label;
@@ -2094,8 +2162,11 @@ Rizky Ramadhan, Sahabat, 08987654321, Bandung" required></textarea>
 
       try {
         const res = await fetch('/admin/api/' + name);
-        allRows = await res.json();
-        applyFilter();
+        if (!res.ok) throw new Error('Gagal memuat data');
+        const rows = await res.json();
+        if (currentResource !== name) return;
+        allRows = rows;
+        applyFilter(false);
       } catch (err) {
         showToast('Gagal memuat data ' + name, 'danger');
       }
